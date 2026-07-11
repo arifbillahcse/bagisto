@@ -17,33 +17,225 @@
     ]);
 @endphp
 
-<footer class="mt-9 bg-white max-sm:mt-10">
-    <div class="flex flex-wrap justify-between gap-x-10 gap-y-8 px-[60px] py-[60px] max-md:px-8 max-md:py-8 max-sm:px-4 max-sm:py-5">
+{{--
+    Custom footer styles are pushed to the layout's @stack('styles') slot, which
+    renders AFTER the compiled app.css bundle. Every rule is namespaced under
+    `.esoft-footer` so it cannot collide with any global theme class, and it is
+    plain CSS (no @apply / Tailwind utilities) so it renders correctly without
+    rebuilding the Vite bundle.
+--}}
+@pushOnce('styles')
+    <style>
+        .esoft-footer {
+            margin-top: 2.25rem;
+            background-color: #ffffff;
+        }
+
+        .esoft-footer__container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 40px 80px;
+            max-width: 1400px;
+            margin-inline: auto;
+            padding: 60px;
+        }
+
+        /* Left block: logo, description, phone */
+        .esoft-footer__brand {
+            flex: 1 1 320px;
+            max-width: 360px;
+        }
+
+        .esoft-footer__logo {
+            display: inline-block;
+            max-width: 200px;
+            margin-bottom: 20px;
+        }
+
+        .esoft-footer__logo img {
+            width: auto;
+            height: auto;
+            max-height: 48px;
+        }
+
+        .esoft-footer__logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #060C3B;
+            letter-spacing: .3px;
+        }
+
+        .esoft-footer__desc {
+            font-size: .875rem;
+            line-height: 1.6;
+            color: #71717a;
+            margin-bottom: 24px;
+        }
+
+        .esoft-footer__phone {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .esoft-footer__phone-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+            border-radius: 10px;
+            background-color: #060C3B;
+        }
+
+        .esoft-footer__phone-icon svg {
+            width: 22px;
+            height: 22px;
+            color: #ffffff;
+        }
+
+        .esoft-footer__phone-label {
+            font-size: .72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .4px;
+            color: #060C3B;
+            margin-bottom: 2px;
+        }
+
+        .esoft-footer__phone-number {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #18181b;
+        }
+
+        /* Right block: the two link columns grouped together */
+        .esoft-footer__links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px 90px;
+        }
+
+        .esoft-footer__col-title {
+            font-size: .8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            color: #18181b;
+            margin-bottom: 20px;
+        }
+
+        .esoft-footer__col ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .esoft-footer__col a {
+            font-size: .875rem;
+            color: #71717a;
+            text-decoration: none;
+            transition: color .15s ease;
+        }
+
+        .esoft-footer__col a:hover {
+            color: #060C3B;
+        }
+
+        /* Bottom bar: copyright + payment methods */
+        .esoft-footer__bottom {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            border-top: 1px solid #e4e4e7;
+            padding: 18px 60px;
+        }
+
+        .esoft-footer__copyright {
+            font-size: .875rem;
+            color: #71717a;
+            margin: 0;
+        }
+
+        .esoft-footer__payment {
+            height: 26px;
+            width: auto;
+        }
+
+        /* Tablet: stack the brand block above the links */
+        @media (max-width: 1024px) {
+            .esoft-footer__container {
+                padding: 40px 32px;
+                gap: 36px;
+            }
+
+            .esoft-footer__brand {
+                max-width: 100%;
+                flex-basis: 100%;
+            }
+        }
+
+        /* Mobile: tighten spacing and center the bottom bar */
+        @media (max-width: 640px) {
+            .esoft-footer__container {
+                padding: 24px 16px;
+                gap: 28px;
+            }
+
+            .esoft-footer__links {
+                gap: 28px 48px;
+            }
+
+            .esoft-footer__bottom {
+                justify-content: center;
+                text-align: center;
+                padding: 16px 20px;
+            }
+
+            .esoft-footer__payment {
+                height: 22px;
+            }
+        }
+    </style>
+@endPushOnce
+
+<footer class="esoft-footer">
+    <div class="esoft-footer__container">
         {!! view_render_event('bagisto.shop.layout.footer.logo.before') !!}
 
         <!-- Logo, description and phone -->
-        <div class="grid max-w-[340px] gap-4">
+        <div class="esoft-footer__brand">
             <a
                 href="{{ route('shop.home.index') }}"
-                class="block max-w-[220px]"
+                class="esoft-footer__logo"
             >
-                <img
-                    src="{{ $channel->logo_url ?? bagisto_asset('images/logo.svg') }}"
-                    alt="{{ $channel->name }}"
-                    class="h-auto max-h-12 w-auto"
-                    v-pre
-                />
+                @if ($channel->logo_url)
+                    <img
+                        src="{{ $channel->logo_url }}"
+                        alt="{{ $channel->name }}"
+                        onerror="this.style.display='none';this.nextElementSibling.style.display='inline';"
+                    />
+                    <span class="esoft-footer__logo-text" style="display:none;">{{ $channel->name }}</span>
+                @else
+                    <span class="esoft-footer__logo-text">{{ $channel->name }}</span>
+                @endif
             </a>
 
-            <p class="text-sm text-zinc-500">
+            <p class="esoft-footer__desc">
                 Welcome to {{ $channel->name }}. Explore our wide range of products with the best quality and service you can trust.
             </p>
 
-            <div class="flex items-center gap-3">
-                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-navyBlue">
+            <div class="esoft-footer__phone">
+                <div class="esoft-footer__phone-icon">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="h-6 w-6 text-white"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -58,13 +250,11 @@
                 </div>
 
                 <div>
-                    <p class="text-xs font-medium uppercase text-navyBlue">
-                        Need help? Call us!
-                    </p>
+                    <p class="esoft-footer__phone-label">Need help? Call us!</p>
 
                     <a
                         href="tel:01779440297"
-                        class="text-base font-bold text-zinc-900"
+                        class="esoft-footer__phone-number"
                     >
                         01779440297
                     </a>
@@ -76,139 +266,44 @@
 
         {!! view_render_event('bagisto.shop.layout.footer.links.before') !!}
 
-        <!-- Useful links -->
-        <div class="grid gap-4 text-sm">
-            <p class="text-sm font-bold uppercase text-zinc-900">
-                Useful Links
-            </p>
+        <!-- Link columns grouped together on the right -->
+        <div class="esoft-footer__links">
+            <!-- Useful links -->
+            <div class="esoft-footer__col">
+                <p class="esoft-footer__col-title">Useful Links</p>
 
-            <ul class="grid gap-3 text-sm text-zinc-500">
-                <li>
-                    <a
-                        href="#"
-                        class="hover:text-navyBlue"
-                    >
-                        Home
-                    </a>
-                </li>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Contact us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Returns Policy</a></li>
+                    <li><a href="#">Terms &amp; Conditions</a></li>
+                </ul>
+            </div>
 
-                <li>
-                    <a
-                        href="#"
-                        class="hover:text-navyBlue"
-                    >
-                        Blog
-                    </a>
-                </li>
+            <!-- Categories -->
+            <div class="esoft-footer__col">
+                <p class="esoft-footer__col-title">Categories</p>
 
-                <li>
-                    <a
-                        href="#"
-                        class="hover:text-navyBlue"
-                    >
-                        Contact us
-                    </a>
-                </li>
-
-                <li>
-                    <a
-                        href="#"
-                        class="hover:text-navyBlue"
-                    >
-                        Privacy Policy
-                    </a>
-                </li>
-
-                <li>
-                    <a
-                        href="#"
-                        class="hover:text-navyBlue"
-                    >
-                        Returns Policy
-                    </a>
-                </li>
-
-                <li>
-                    <a
-                        href="#"
-                        class="hover:text-navyBlue"
-                    >
-                        Terms &amp; Conditions
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Categories -->
-        <div class="grid gap-4 text-sm">
-            <p class="text-sm font-bold uppercase text-zinc-900">
-                Categories
-            </p>
-
-            <ul class="grid gap-3 text-sm text-zinc-500">
-                <li>
-                    <a
-                        href="#"
-                        class="hover:text-navyBlue"
-                    >
-                        Category 1
-                    </a>
-                </li>
-
-                <li>
-                    <a
-                        href="#"
-                        class="hover:text-navyBlue"
-                    >
-                        Category 2
-                    </a>
-                </li>
-
-                <li>
-                    <a
-                        href="#"
-                        class="hover:text-navyBlue"
-                    >
-                        Category 3
-                    </a>
-                </li>
-
-                <li>
-                    <a
-                        href="#"
-                        class="hover:text-navyBlue"
-                    >
-                        Category 4
-                    </a>
-                </li>
-
-                <li>
-                    <a
-                        href="#"
-                        class="hover:text-navyBlue"
-                    >
-                        Category 5
-                    </a>
-                </li>
-
-                <li>
-                    <a
-                        href="#"
-                        class="hover:text-navyBlue"
-                    >
-                        Category 6
-                    </a>
-                </li>
-            </ul>
+                <ul>
+                    <li><a href="#">Category 1</a></li>
+                    <li><a href="#">Category 2</a></li>
+                    <li><a href="#">Category 3</a></li>
+                    <li><a href="#">Category 4</a></li>
+                    <li><a href="#">Category 5</a></li>
+                    <li><a href="#">Category 6</a></li>
+                </ul>
+            </div>
         </div>
 
         {!! view_render_event('bagisto.shop.layout.footer.links.after') !!}
     </div>
 
-    <div class="flex flex-wrap items-center justify-between gap-4 border-t border-zinc-200 px-[60px] py-4 max-md:justify-center max-sm:px-5">
+    <div class="esoft-footer__bottom">
         {!! view_render_event('bagisto.shop.layout.footer.footer_text.before') !!}
 
-        <p class="text-sm text-zinc-500">
+        <p class="esoft-footer__copyright">
             @if (core()->getConfigData('general.content.footer.copyright_content'))
                 {!! core()->getConfigData('general.content.footer.copyright_content') !!}
             @else
@@ -217,9 +312,9 @@
         </p>
 
         <img
+            class="esoft-footer__payment"
             src="https://tereazone.ae/wp-content/uploads/2025/08/Payment-method.png"
             alt="Accepted payment methods"
-            class="h-6 w-auto max-sm:h-5"
         />
 
         {!! view_render_event('bagisto.shop.layout.footer.footer_text.after') !!}
