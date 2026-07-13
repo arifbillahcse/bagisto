@@ -624,7 +624,8 @@
     </style>
 @endPushOnce
 
-<x-shop::layouts>
+{{-- has-feature="false" hides Bagisto's built-in services strip — the page has its own .tz-features strip --}}
+<x-shop::layouts :has-feature="false">
     <!-- Page Title -->
     <x-slot:title>
         {{  $channel->home_seo['meta_title'] ?? '' }}
@@ -695,7 +696,7 @@
     <!-- ============ 3. SHOP BY CATEGORY (native, real data) ============ -->
     <x-shop::categories.carousel
         title="Shop by Category"
-        :src="route('shop.api.categories.index', ['sort' => 'asc', 'limit' => 10])"
+        :src="route('shop.api.categories.index', ['parent_id' => $channel->root_category_id, 'sort' => 'asc', 'limit' => 10])"
         :navigation-link="route('shop.home.index')"
         aria-label="Shop by category"
     />

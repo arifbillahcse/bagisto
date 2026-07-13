@@ -5,6 +5,7 @@
     to retrieve it from the view composer, as this is an anonymous component.
 -->
 @inject('themeCustomizationRepository', 'Webkul\Theme\Repositories\ThemeCustomizationRepository')
+@inject('categoryRepository', 'Webkul\Category\Repositories\CategoryRepository')
 
 @php
     $channel = core()->getCurrentChannel();
@@ -15,16 +16,23 @@
         'theme_code' => $channel->theme,
         'channel_id' => $channel->id,
     ]);
+
+    /**
+     * Top-level visible categories for the "Categories" column
+     * (children of the channel's root category, max 6).
+     */
+    $footerCategories = collect($categoryRepository->getVisibleCategoryTree($channel->root_category_id))->take(6);
 @endphp
 
 {{--
-    Custom footer styles are pushed to the layout's @stack('styles') slot, which
-    renders AFTER the compiled app.css bundle. Every rule is namespaced under
-    `.esoft-footer` so it cannot collide with any global theme class, and it is
-    plain CSS (no @apply / Tailwind utilities) so it renders correctly without
-    rebuilding the Vite bundle.
+    The footer component renders AFTER the layout's <head> @stack('styles') has
+    already been output (the footer sits at the bottom of the layout template),
+    so pushing styles to that stack silently drops them. The <style> block is
+    therefore emitted inline with the footer markup — browsers apply it fine.
+    Every rule is namespaced under `.esoft-footer` so it cannot collide with any
+    global theme class, and it is plain CSS (no @apply / Tailwind utilities) so
+    no Vite rebuild is needed.
 --}}
-@pushOnce('styles')
     <style>
         .esoft-footer {
             margin-top: 2.25rem;
@@ -193,7 +201,6 @@
             }
         }
     </style>
-@endPushOnce
 
 <footer class="esoft-footer">
     <div class="esoft-footer__container">
@@ -260,28 +267,27 @@
             <p class="esoft-footer__col-title">Useful Links</p>
 
             <ul>
-                <li><a href="#">Home</a></li>
-                <li><a href="#">Blog</a></li>
-                <li><a href="#">Contact us</a></li>
-                <li><a href="#">Privacy Policy</a></li>
-                <li><a href="#">Returns Policy</a></li>
-                <li><a href="#">Terms &amp; Conditions</a></li>
+                <li><a href="{{ route('shop.home.index') }}">Home</a></li>
+                <li><a href="{{ route('shop.cms.page', 'about-us') }}">About Us</a></li>
+                <li><a href="{{ route('shop.home.contact_us') }}">Contact us</a></li>
+                <li><a href="{{ route('shop.cms.page', 'privacy-policy') }}">Privacy Policy</a></li>
+                <li><a href="{{ route('shop.cms.page', 'return-policy') }}">Returns Policy</a></li>
+                <li><a href="{{ route('shop.cms.page', 'terms-conditions') }}">Terms &amp; Conditions</a></li>
             </ul>
         </div>
 
-        <!-- Categories -->
-        <div class="esoft-footer__col">
-            <p class="esoft-footer__col-title">Categories</p>
+        <!-- Categories (real top-level categories from the catalog) -->
+        @if ($footerCategories->isNotEmpty())
+            <div class="esoft-footer__col">
+                <p class="esoft-footer__col-title">Categories</p>
 
-            <ul>
-                <li><a href="#">Category 1</a></li>
-                <li><a href="#">Category 2</a></li>
-                <li><a href="#">Category 3</a></li>
-                <li><a href="#">Category 4</a></li>
-                <li><a href="#">Category 5</a></li>
-                <li><a href="#">Category 6</a></li>
-            </ul>
-        </div>
+                <ul>
+                    @foreach ($footerCategories as $category)
+                        <li><a href="{{ $category->url }}">{{ $category->name }}</a></li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
         {!! view_render_event('bagisto.shop.layout.footer.links.after') !!}
     </div>
