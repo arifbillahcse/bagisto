@@ -32,10 +32,10 @@
         }
 
         .esoft-footer__container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 40px 80px;
+            display: grid;
+            grid-template-columns: minmax(260px, 1.6fr) 1fr 1fr;
+            align-items: start;
+            gap: 32px 56px;
             max-width: 1400px;
             margin-inline: auto;
             padding: 60px;
@@ -43,8 +43,7 @@
 
         /* Left block: logo, description, phone */
         .esoft-footer__brand {
-            flex: 1 1 320px;
-            max-width: 360px;
+            max-width: 380px;
         }
 
         .esoft-footer__logo {
@@ -111,13 +110,6 @@
             color: #18181b;
         }
 
-        /* Right block: the two link columns grouped together */
-        .esoft-footer__links {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 40px 90px;
-        }
-
         .esoft-footer__col-title {
             font-size: .8rem;
             font-weight: 700;
@@ -169,16 +161,17 @@
             width: auto;
         }
 
-        /* Tablet: stack the brand block above the links */
+        /* Tablet: brand spans the full width above two link columns */
         @media (max-width: 1024px) {
             .esoft-footer__container {
+                grid-template-columns: 1fr 1fr;
                 padding: 40px 32px;
-                gap: 36px;
+                gap: 36px 48px;
             }
 
             .esoft-footer__brand {
+                grid-column: 1 / -1;
                 max-width: 100%;
-                flex-basis: 100%;
             }
         }
 
@@ -186,11 +179,7 @@
         @media (max-width: 640px) {
             .esoft-footer__container {
                 padding: 24px 16px;
-                gap: 28px;
-            }
-
-            .esoft-footer__links {
-                gap: 28px 48px;
+                gap: 28px 32px;
             }
 
             .esoft-footer__bottom {
@@ -266,35 +255,32 @@
 
         {!! view_render_event('bagisto.shop.layout.footer.links.before') !!}
 
-        <!-- Link columns grouped together on the right -->
-        <div class="esoft-footer__links">
-            <!-- Useful links -->
-            <div class="esoft-footer__col">
-                <p class="esoft-footer__col-title">Useful Links</p>
+        <!-- Useful links -->
+        <div class="esoft-footer__col">
+            <p class="esoft-footer__col-title">Useful Links</p>
 
-                <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Contact us</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Returns Policy</a></li>
-                    <li><a href="#">Terms &amp; Conditions</a></li>
-                </ul>
-            </div>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">Contact us</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Returns Policy</a></li>
+                <li><a href="#">Terms &amp; Conditions</a></li>
+            </ul>
+        </div>
 
-            <!-- Categories -->
-            <div class="esoft-footer__col">
-                <p class="esoft-footer__col-title">Categories</p>
+        <!-- Categories -->
+        <div class="esoft-footer__col">
+            <p class="esoft-footer__col-title">Categories</p>
 
-                <ul>
-                    <li><a href="#">Category 1</a></li>
-                    <li><a href="#">Category 2</a></li>
-                    <li><a href="#">Category 3</a></li>
-                    <li><a href="#">Category 4</a></li>
-                    <li><a href="#">Category 5</a></li>
-                    <li><a href="#">Category 6</a></li>
-                </ul>
-            </div>
+            <ul>
+                <li><a href="#">Category 1</a></li>
+                <li><a href="#">Category 2</a></li>
+                <li><a href="#">Category 3</a></li>
+                <li><a href="#">Category 4</a></li>
+                <li><a href="#">Category 5</a></li>
+                <li><a href="#">Category 6</a></li>
+            </ul>
         </div>
 
         {!! view_render_event('bagisto.shop.layout.footer.links.after') !!}
