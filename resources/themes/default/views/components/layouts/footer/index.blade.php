@@ -13,13 +13,19 @@
     /**
      * Admin-managed link sections (Admin -> Settings -> Themes -> Footer Links).
      * Each section is a list of ['title' => ..., 'url' => ..., 'sort_order' => ...].
+     *
+     * The header rows are driven by footer_links records too, matched on their
+     * name, so those names are skipped here - otherwise the footer would render
+     * whichever record happened to be created first.
      */
-    $linkCustomization = $themeCustomizationRepository->findOneWhere([
+    $reservedForHeader = ['Top Bar Contact', 'Top Bar Links', 'Header Links'];
+
+    $linkCustomization = $themeCustomizationRepository->findWhere([
         'type'       => 'footer_links',
         'status'     => 1,
         'theme_code' => $channel->theme,
         'channel_id' => $channel->id,
-    ]);
+    ])->reject(fn ($record) => in_array($record->name, $reservedForHeader, true))->first();
 
     /**
      * Flatten the admin sections into a single "Useful Links" list. When the
