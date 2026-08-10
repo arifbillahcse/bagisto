@@ -170,6 +170,14 @@
             background: var(--tz-border);
         }
 
+        .tz-catsection {
+            padding: 56px 0;
+        }
+
+        .tz-catsection .tz-section-title {
+            margin-bottom: 0;
+        }
+
         .tz-btn {
             display: inline-block;
             background: var(--tz-accent);
@@ -688,6 +696,10 @@
                 height: 260px;
             }
 
+            .tz-catsection {
+                padding: 36px 0;
+            }
+
             .tz-brands__inner {
                 justify-content: center;
             }
@@ -826,13 +838,37 @@
         />
     @endif
 
+    {{--
+        Shop by Category - the native `x-shop::categories.carousel` component
+        accepts a `title` prop but never renders it, so the heading (and the
+        extra breathing room around the section) is added here instead.
+
+        The heading is optional and admin-editable: create a `Footer Links`
+        theme customization named "Category Section Heading" with a single
+        link whose Title is the heading text (its URL is unused). Falls back
+        to "Shop by Category" if that entry doesn't exist.
+    --}}
+    @php
+        $categoryHeadingRecord = collect($customizations)->where('type', 'footer_links')->firstWhere('name', 'Category Section Heading');
+
+        $categoryHeading = collect($categoryHeadingRecord?->options ?? [])
+            ->flatMap(fn ($column) => $column)
+            ->first()['title'] ?? 'Shop by Category';
+    @endphp
+
     <!-- ============ 3. SHOP BY CATEGORY (native, real data) ============ -->
-    <x-shop::categories.carousel
-        title="Shop by Category"
-        :src="route('shop.api.categories.index', ['parent_id' => $channel->root_category_id, 'sort' => 'asc', 'limit' => 10])"
-        :navigation-link="route('shop.home.index')"
-        aria-label="Shop by category"
-    />
+    <section class="tz-catsection">
+        <div class="tz-container">
+            <h2 class="tz-section-title">{{ $categoryHeading }}</h2>
+        </div>
+
+        <x-shop::categories.carousel
+            :title="$categoryHeading"
+            :src="route('shop.api.categories.index', ['parent_id' => $channel->root_category_id, 'sort' => 'asc', 'limit' => 10])"
+            :navigation-link="route('shop.home.index')"
+            aria-label="Shop by category"
+        />
+    </section>
 
     <!-- ============ 3b. CATEGORY BANNER ============ -->
     @php
