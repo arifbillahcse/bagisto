@@ -455,11 +455,11 @@
         top: 100%;
         left: 0;
         z-index: 20;
-        min-width: 220px;
-        max-width: 900px;
+        min-width: 240px;
+        max-width: 340px;
         max-height: 70vh;
         overflow-y: auto;
-        padding: 22px 26px;
+        padding: 8px 0;
         background-color: #ffffff;
         border-top: 3px solid #F4511E;
         box-shadow: 0 8px 20px rgba(0, 0, 0, .18);
@@ -480,46 +480,42 @@
         transform: translateY(0);
     }
 
+    /* Sub-categories stack vertically, one per line, under their parent. */
     .rnj-catbar__columns {
-        display: flex;
-        gap: 44px;
-    }
-
-    .rnj-catbar__column {
-        min-width: 150px;
+        display: block;
     }
 
     .rnj-catbar__child {
         display: block;
-        margin-bottom: 10px;
+        padding: 9px 22px;
         font-size: 14px;
-        font-weight: 600;
+        font-weight: 500;
         color: #0B2540;
         text-decoration: none;
-        white-space: nowrap;
     }
 
     .rnj-catbar__child:hover {
         color: #F4511E;
+        background-color: #f7f7f8;
     }
 
     .rnj-catbar__grandchildren {
         list-style: none;
         margin: 0;
-        padding: 0;
-        display: grid;
-        gap: 8px;
+        padding: 0 0 4px;
     }
 
     .rnj-catbar__grandchild {
+        display: block;
+        padding: 6px 22px 6px 36px;
         font-size: 13px;
         color: #52525b;
         text-decoration: none;
-        white-space: nowrap;
     }
 
     .rnj-catbar__grandchild:hover {
         color: #F4511E;
+        background-color: #f7f7f8;
     }
 
     @media (max-width: 1180px) {
