@@ -35,6 +35,36 @@ require __DIR__.'/../vendor/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
+| Fallback Autoloader For The ShopExtension Package
+|--------------------------------------------------------------------------
+|
+| On hosts where `composer dump-autoload` cannot be run from the web
+| process, Composer's compiled/optimized autoloader (vendor/composer/
+| autoload_static.php) can go stale and never pick up a namespace added
+| to composer.json's autoload map, even after autoload_psr4.php itself
+| is corrected -- the optimized loader bypasses that file at runtime.
+| This registers a small, permanent fallback so packages/Webkul/
+| ShopExtension keeps autoloading regardless of that cache's state.
+|
+*/
+
+spl_autoload_register(function (string $class) {
+    $prefix = 'Webkul\\ShopExtension\\';
+
+    if (! str_starts_with($class, $prefix)) {
+        return;
+    }
+
+    $relative = substr($class, strlen($prefix));
+    $path = __DIR__.'/../packages/Webkul/ShopExtension/src/'.str_replace('\\', '/', $relative).'.php';
+
+    if (file_exists($path)) {
+        require $path;
+    }
+});
+
+/*
+|--------------------------------------------------------------------------
 | Run The Application
 |--------------------------------------------------------------------------
 |
