@@ -3874,6 +3874,7 @@ return [
 
                 'type' => [
                     'category-carousel' => 'カテゴリーカルーセル',
+                    'flash-sale' => 'フラッシュセール',
                     'footer-links' => 'フッターリンク',
                     'image-carousel' => '画像カルーセル',
                     'product-carousel' => '商品カルーセル',
@@ -3904,6 +3905,9 @@ return [
                 'featured' => '注目',
                 'filter-title' => 'タイトル',
                 'filters' => 'フィルター',
+                'flash-sale' => 'フラッシュセール',
+                'flash-sale-description' => 'フラッシュセールに表示する商品を選び、ドラッグして並び順を設定します。',
+                'flash-sale-subtitle' => 'サブタイトル',
                 'footer-link' => 'フッターリンク',
                 'footer-link-description' => 'ウェブサイトのシームレスな探索と情報取得のために、フッターリンクを介してナビゲートします。',
                 'footer-link-form-title' => 'フッターリンク',

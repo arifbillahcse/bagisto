@@ -3874,6 +3874,7 @@ return [
 
                 'type' => [
                     'category-carousel' => 'Category Carousel',
+                    'flash-sale' => 'Flash Sale',
                     'footer-links' => 'Footer Links',
                     'image-carousel' => 'Image Carousel',
                     'product-carousel' => 'Product Carousel',
@@ -3904,6 +3905,9 @@ return [
                 'featured' => 'Featured',
                 'filter-title' => 'Title',
                 'filters' => 'Filters',
+                'flash-sale' => 'Flash Sale',
+                'flash-sale-description' => 'Hand-pick the exact products to feature in the flash sale section, and drag to arrange their order.',
+                'flash-sale-subtitle' => 'Subtitle',
                 'footer-link' => 'Footer Links',
                 'footer-link-description' => 'Navigate via footer links for seamless website exploration and information.',
                 'footer-link-form-title' => 'Footer Link',

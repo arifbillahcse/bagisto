@@ -3874,6 +3874,7 @@ return [
 
                 'type' => [
                     'category-carousel' => 'Kategorie Karussell',
+                    'flash-sale' => 'Flash-Sale',
                     'footer-links' => 'Fußzeilen-Links',
                     'image-carousel' => 'Bildkarussell',
                     'product-carousel' => 'Produkt Karussell',
@@ -3904,6 +3905,9 @@ return [
                 'featured' => 'Hervorgehoben',
                 'filter-title' => 'Titel',
                 'filters' => 'Filter',
+                'flash-sale' => 'Flash-Sale',
+                'flash-sale-description' => 'Wählen Sie die Produkte für den Flash-Sale-Bereich aus und ziehen Sie sie, um die Reihenfolge festzulegen.',
+                'flash-sale-subtitle' => 'Untertitel',
                 'footer-link' => 'Fußzeilen-Links',
                 'footer-link-description' => 'Durch Fußzeilen-Links nahtlos durch die Website navigieren und Informationen erhalten.',
                 'footer-link-form-title' => 'Fußzeilen-Link',

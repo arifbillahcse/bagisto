@@ -3874,6 +3874,7 @@ return [
 
                 'type' => [
                     'category-carousel' => 'Carrousel de catégorie',
+                    'flash-sale' => 'Vente Flash',
                     'footer-links' => 'Liens de pied de page',
                     'image-carousel' => 'Carrousel d\'images',
                     'product-carousel' => 'Carrousel de produits',
@@ -3904,6 +3905,9 @@ return [
                 'featured' => 'En vedette',
                 'filter-title' => 'Titre',
                 'filters' => 'Filtres',
+                'flash-sale' => 'Vente Flash',
+                'flash-sale-description' => 'Choisissez les produits à mettre en avant dans la section vente flash et faites-les glisser pour les ordonner.',
+                'flash-sale-subtitle' => 'Sous-titre',
                 'footer-link' => 'Liens de pied de page',
                 'footer-link-description' => 'Naviguez via les liens de pied de page pour une exploration fluide du site Web et des informations.',
                 'footer-link-form-title' => 'Lien de pied de page',

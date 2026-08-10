@@ -11,6 +11,8 @@ use Webkul\Admin\DataGrids\Theme\ThemeDataGrid;
 use Webkul\Admin\Http\Controllers\Controller;
 use Webkul\Admin\Http\Requests\MassDestroyRequest;
 use Webkul\Admin\Http\Requests\MassUpdateRequest;
+use Webkul\Admin\Http\Resources\ProductResource;
+use Webkul\Product\Repositories\ProductRepository;
 use Webkul\Theme\Repositories\ThemeCustomizationRepository;
 
 class ThemeController extends Controller
@@ -56,7 +58,7 @@ class ThemeController extends Controller
         $validated = $this->validate(request(), [
             'name' => 'required',
             'sort_order' => 'required|numeric',
-            'type' => 'required|in:product_carousel,category_carousel,static_content,image_carousel,footer_links,services_content',
+            'type' => 'required|in:product_carousel,category_carousel,static_content,image_carousel,footer_links,services_content,flash_sale',
             'channel_id' => 'required|in:'.implode(',', (core()->getAllChannels()->pluck('id')->toArray())),
             'theme_code' => 'required',
         ]);
@@ -81,7 +83,41 @@ class ThemeController extends Controller
     {
         $theme = $this->themeCustomizationRepository->find($id);
 
-        return view('admin::settings.themes.edit', compact('theme'));
+        /**
+         * Flash sale stores only the hand-picked product IDs, so the products
+         * are re-hydrated here (in the admin's saved order) to render the
+         * existing selection in the picker.
+         */
+        $flashSaleProducts = $theme->type === 'flash_sale'
+            ? $this->getFlashSaleProducts($theme)
+            : [];
+
+        return view('admin::settings.themes.edit', compact('theme', 'flashSaleProducts'));
+    }
+
+    /**
+     * Resolve the products selected for a flash sale customization, preserving
+     * the order the admin arranged them in.
+     */
+    protected function getFlashSaleProducts($theme): array
+    {
+        $productIds = $theme->translate(core()->getRequestedLocaleCode())->options['product_ids'] ?? [];
+
+        if (empty($productIds)) {
+            return [];
+        }
+
+        $products = app(ProductRepository::class)
+            ->with(['images', 'inventories', 'price_indices'])
+            ->findWhereIn('id', $productIds)
+            ->keyBy('id');
+
+        return ProductResource::collection(
+            collect($productIds)
+                ->map(fn ($productId) => $products->get($productId))
+                ->filter()
+                ->values()
+        )->resolve();
     }
 
     /**
@@ -94,7 +130,7 @@ class ThemeController extends Controller
         $this->validate(request(), [
             'name' => 'required',
             'sort_order' => 'required|numeric',
-            'type' => 'required|in:product_carousel,category_carousel,static_content,image_carousel,footer_links,services_content',
+            'type' => 'required|in:product_carousel,category_carousel,static_content,image_carousel,footer_links,services_content,flash_sale',
             'channel_id' => 'required|in:'.implode(',', (core()->getAllChannels()->pluck('id')->toArray())),
             'theme_code' => 'required',
         ]);

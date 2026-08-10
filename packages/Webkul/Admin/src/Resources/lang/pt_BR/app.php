@@ -3874,6 +3874,7 @@ return [
 
                 'type' => [
                     'category-carousel' => 'Carrossel de Categoria',
+                    'flash-sale' => 'Promoção Relâmpago',
                     'footer-links' => 'Links do Rodapé',
                     'image-carousel' => 'Carrossel de imagens',
                     'product-carousel' => 'Carrossel de Produtos',
@@ -3904,6 +3905,9 @@ return [
                 'featured' => 'Destacado',
                 'filter-title' => 'Título',
                 'filters' => 'Filtros',
+                'flash-sale' => 'Promoção Relâmpago',
+                'flash-sale-description' => 'Escolha os produtos para destacar na seção de promoção relâmpago e arraste para ordená-los.',
+                'flash-sale-subtitle' => 'Subtítulo',
                 'footer-link' => 'Links do Rodapé',
                 'footer-link-description' => 'Navegue por meio de links no rodapé para explorar o site de forma fácil e obter informações.',
                 'footer-link-form-title' => 'Link do Rodapé',

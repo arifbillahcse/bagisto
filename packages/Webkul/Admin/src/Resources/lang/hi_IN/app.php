@@ -3874,6 +3874,7 @@ return [
 
                 'type' => [
                     'category-carousel' => 'श्रेणी कैरोसल',
+                    'flash-sale' => 'फ्लैश सेल',
                     'footer-links' => 'फ़ुटर लिंक्स',
                     'image-carousel' => 'इमेज कैरोसेल',
                     'product-carousel' => 'उत्पाद कैरोसल',
@@ -3904,6 +3905,9 @@ return [
                 'featured' => 'विशेष',
                 'filter-title' => 'शीर्षक',
                 'filters' => 'फ़िल्टर्स',
+                'flash-sale' => 'फ्लैश सेल',
+                'flash-sale-description' => 'फ्लैश सेल अनुभाग में दिखाने के लिए उत्पाद चुनें और क्रम बदलने के लिए खींचें।',
+                'flash-sale-subtitle' => 'उपशीर्षक',
                 'footer-link' => 'फ़ुटर लिंक्स',
                 'footer-link-description' => 'सुगम वेबसाइट अन्वेषण और जानकारी के लिए फ़ुटर लिंक्स के माध्यम से नेविगेट करें।',
                 'footer-link-form-title' => 'फ़ुटर लिंक',

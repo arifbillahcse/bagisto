@@ -103,6 +103,9 @@
 
                 <!-- Services-content Template -->
                 @includeWhen($theme->type === 'services_content', 'admin::settings.themes.edit.services-content')
+
+                <!-- Flash-sale Template -->
+                @includeWhen($theme->type === 'flash_sale', 'admin::settings.themes.edit.flash-sale')
             </div>
 
             <!-- General -->

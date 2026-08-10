@@ -3874,6 +3874,7 @@ return [
 
                 'type' => [
                     'category-carousel' => 'Categorie Carrousel',
+                    'flash-sale' => 'Flash Sale',
                     'footer-links' => 'Voetteksten',
                     'image-carousel' => 'Afbeeldingen carrousel',
                     'product-carousel' => 'Product Carrousel',
@@ -3904,6 +3905,9 @@ return [
                 'featured' => 'Uitgelicht',
                 'filter-title' => 'Titel',
                 'filters' => 'Filters',
+                'flash-sale' => 'Flash Sale',
+                'flash-sale-description' => 'Kies de producten voor de flash sale sectie en sleep ze om de volgorde te bepalen.',
+                'flash-sale-subtitle' => 'Ondertitel',
                 'footer-link' => 'Voetteksten',
                 'footer-link-description' => 'Navigeer via voettekstlinks voor naadloze websiteverkenning en informatie.',
                 'footer-link-form-title' => 'Voettekstlink',

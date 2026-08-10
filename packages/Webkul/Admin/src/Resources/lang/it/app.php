@@ -3874,6 +3874,7 @@ return [
 
                 'type' => [
                     'category-carousel' => 'Carosello Categoria',
+                    'flash-sale' => 'Vendita Lampo',
                     'footer-links' => 'Link Piè di Pagina',
                     'image-carousel' => 'Carosello di immagini',
                     'product-carousel' => 'Carosello Prodotti',
@@ -3904,6 +3905,9 @@ return [
                 'featured' => 'In primo piano',
                 'filter-title' => 'Titolo',
                 'filters' => 'Filtri',
+                'flash-sale' => 'Vendita Lampo',
+                'flash-sale-description' => 'Scegli i prodotti da mostrare nella sezione vendita lampo e trascinali per ordinarli.',
+                'flash-sale-subtitle' => 'Sottotitolo',
                 'footer-link' => 'Link Piè di Pagina',
                 'footer-link-description' => 'Naviga attraverso i link nel piè di pagina per una navigazione e informazioni sul sito senza interruzioni.',
                 'footer-link-form-title' => 'Link Piè di Pagina',

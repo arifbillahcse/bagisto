@@ -3874,6 +3874,7 @@ return [
 
                 'type' => [
                     'category-carousel' => 'Carrusel de Categoría',
+                    'flash-sale' => 'Venta Flash',
                     'footer-links' => 'Enlaces del Pie de Página',
                     'image-carousel' => 'Carrusel de imágenes',
                     'product-carousel' => 'Carrusel de Productos',
@@ -3904,6 +3905,9 @@ return [
                 'featured' => 'Destacado',
                 'filter-title' => 'Título',
                 'filters' => 'Filtros',
+                'flash-sale' => 'Venta Flash',
+                'flash-sale-description' => 'Elija los productos exactos para destacar en la sección de venta flash y arrástrelos para ordenarlos.',
+                'flash-sale-subtitle' => 'Subtítulo',
                 'footer-link' => 'Enlaces del Pie de Página',
                 'footer-link-description' => 'Navega a través de los enlaces del pie de página para explorar el sitio web de manera fluida y obtener información.',
                 'footer-link-form-title' => 'Enlace del Pie de Página',

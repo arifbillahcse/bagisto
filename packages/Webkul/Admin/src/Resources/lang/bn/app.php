@@ -3874,6 +3874,7 @@ return [
 
                 'type' => [
                     'category-carousel' => 'বিভাগ ক্যারোসেল',
+                    'flash-sale' => 'ফ্ল্যাশ সেল',
                     'footer-links' => 'ফুটার লিংক',
                     'image-carousel' => 'চিত্র ক্যারাসেল',
                     'product-carousel' => 'পণ্য ক্যারোসেল',
@@ -3904,6 +3905,9 @@ return [
                 'featured' => 'বৈশিষ্ট্যযুক্ত',
                 'filter-title' => 'শিরোনাম',
                 'filters' => 'ফিল্টার',
+                'flash-sale' => 'ফ্ল্যাশ সেল',
+                'flash-sale-description' => 'ফ্ল্যাশ সেল বিভাগে দেখানোর জন্য পণ্য নির্বাচন করুন এবং টেনে ক্রম সাজান।',
+                'flash-sale-subtitle' => 'উপশিরোনাম',
                 'footer-link' => 'ফুটার লিংক',
                 'footer-link-description' => 'সাইটের অবিচ্ছেদ্য ভ্রমণ এবং তথ্যের জন্য ফুটার লিংক দ্বারা ন্যাভিগেট করুন।',
                 'footer-link-form-title' => 'ফুটার লিংক',

@@ -3874,6 +3874,7 @@ return [
 
                 'type' => [
                     'category-carousel' => 'کاروسل دسته‌بندی',
+                    'flash-sale' => 'فروش ویژه',
                     'footer-links' => 'لینک‌های پاورقی',
                     'image-carousel' => 'کروسل تصاویر',
                     'product-carousel' => 'کاروسل محصولات',
@@ -3904,6 +3905,9 @@ return [
                 'featured' => 'برجسته',
                 'filter-title' => 'عنوان',
                 'filters' => 'فیلترها',
+                'flash-sale' => 'فروش ویژه',
+                'flash-sale-description' => 'محصولات مورد نظر برای بخش فروش ویژه را انتخاب کنید و برای مرتب‌سازی بکشید.',
+                'flash-sale-subtitle' => 'زیرعنوان',
                 'footer-link' => 'لینک‌های پاورقی',
                 'footer-link-description' => 'برای جستجوی سایت بدون وقفه و به دسترسی به اطلاعات، از طریق لینک‌های پاورقی پیمایش کنید.',
                 'footer-link-form-title' => 'لینک پاورقی',

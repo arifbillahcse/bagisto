@@ -3874,6 +3874,7 @@ return [
 
                 'type' => [
                     'category-carousel' => 'Category Carousel',
+                    'flash-sale' => 'Reducere Fulger',
                     'footer-links' => 'Footer Links',
                     'image-carousel' => 'Image Carousel',
                     'product-carousel' => 'Product Carousel',
@@ -3904,6 +3905,9 @@ return [
                 'featured' => 'Featured',
                 'filter-title' => 'Title',
                 'filters' => 'Filters',
+                'flash-sale' => 'Reducere Fulger',
+                'flash-sale-description' => 'Alegeți produsele de afișat în secțiunea de reduceri fulger și trageți pentru a le ordona.',
+                'flash-sale-subtitle' => 'Subtitlu',
                 'footer-link' => 'Footer Links',
                 'footer-link-description' => 'Navigate via footer links for seamless website exploration and information.',
                 'footer-link-form-title' => 'Footer Link',

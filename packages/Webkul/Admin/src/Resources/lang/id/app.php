@@ -3874,6 +3874,7 @@ return [
 
                 'type' => [
                     'category-carousel' => 'Carousel Kategori',
+                    'flash-sale' => 'Flash Sale',
                     'footer-links' => 'Tautan Footer',
                     'image-carousel' => 'Carousel Gambar',
                     'product-carousel' => 'Carousel Produk',
@@ -3904,6 +3905,9 @@ return [
                 'featured' => 'Fitur Unggulan',
                 'filter-title' => 'Judul Filter',
                 'filters' => 'Filter',
+                'flash-sale' => 'Flash Sale',
+                'flash-sale-description' => 'Pilih produk yang ingin ditampilkan di bagian flash sale, lalu seret untuk mengatur urutannya.',
+                'flash-sale-subtitle' => 'Subjudul',
                 'footer-link' => 'Tautan Footer',
                 'footer-link-description' => 'Navigasi mudah melalui tautan footer untuk menjelajah dan menemukan informasi di situs Anda.',
                 'footer-link-form-title' => 'Tautan Footer',

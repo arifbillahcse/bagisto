@@ -3874,6 +3874,7 @@ return [
 
                 'type' => [
                     'category-carousel' => 'Kategori Karuseli',
+                    'flash-sale' => 'Flaş İndirim',
                     'footer-links' => 'Alt Bağlantıları',
                     'image-carousel' => 'Görüntü Karuseli',
                     'product-carousel' => 'Ürün Karuseli',
@@ -3904,6 +3905,9 @@ return [
                 'featured' => 'Öne Çıkan',
                 'filter-title' => 'Başlık',
                 'filters' => 'Filtreler',
+                'flash-sale' => 'Flaş İndirim',
+                'flash-sale-description' => 'Flaş indirim bölümünde gösterilecek ürünleri seçin ve sıralamak için sürükleyin.',
+                'flash-sale-subtitle' => 'Alt Başlık',
                 'footer-link' => 'Alt Bağlantıları',
                 'footer-link-description' => 'Sorunsuz web sitesi keşfi ve bilgi için alt bağlantılar aracılığıyla gezinin.',
                 'footer-link-form-title' => 'Alt Bağlantı',

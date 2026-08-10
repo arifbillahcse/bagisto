@@ -3874,6 +3874,7 @@ return [
 
                 'type' => [
                     'category-carousel' => 'Carrousel de Categoria',
+                    'flash-sale' => 'Venda Llampec',
                     'footer-links' => 'Enllaços del Peu de Pàgina',
                     'image-carousel' => 'Carrousel d\'Imatges',
                     'product-carousel' => 'Carrousel de Productes',
@@ -3904,6 +3905,9 @@ return [
                 'featured' => 'Destacat',
                 'filter-title' => 'Títol',
                 'filters' => 'Filtres',
+                'flash-sale' => 'Venda Llampec',
+                'flash-sale-description' => 'Trieu els productes exactes per destacar a la secció de venda llampec i arrossegueu-los per ordenar-los.',
+                'flash-sale-subtitle' => 'Subtítol',
                 'footer-link' => 'Enllaços del Peu de Pàgina',
                 'footer-link-description' => 'Navega pels enllaços del peu de pàgina per explorar el lloc web de manera fluïda i obtenir informació.',
                 'footer-link-form-title' => 'Enllaç al Peu de Pàgina',

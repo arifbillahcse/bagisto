@@ -3874,6 +3874,7 @@ return [
 
                 'type' => [
                     'category-carousel' => 'קרוסלת קטגוריות',
+                    'flash-sale' => 'מכירת בזק',
                     'footer-links' => 'קישורי תחתית',
                     'image-carousel' => 'קרוסלת תמונות',
                     'product-carousel' => 'קרוסלת מוצרים',
@@ -3904,6 +3905,9 @@ return [
                 'featured' => 'מומלץ',
                 'filter-title' => 'כותרת',
                 'filters' => 'מסננים',
+                'flash-sale' => 'מכירת בזק',
+                'flash-sale-description' => 'בחרו את המוצרים להצגה במקטע מכירת הבזק, וגררו כדי לסדר אותם.',
+                'flash-sale-subtitle' => 'כותרת משנה',
                 'footer-link' => 'קישורי תחתית',
                 'footer-link-description' => 'נווט דרך קישורים בתחתית הדף לחוויית גלישה חלקה ומידע.',
                 'footer-link-form-title' => 'קישור לתחתית',

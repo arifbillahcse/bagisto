@@ -3874,6 +3874,7 @@ return [
 
                 'type' => [
                     'category-carousel' => 'ප්‍රවේශ කැරූසල්',
+                    'flash-sale' => 'ෆ්ලෑෂ් සේල්',
                     'footer-links' => 'පිටු සල්ලි',
                     'image-carousel' => 'රූප කැරැසල්',
                     'product-carousel' => 'නිෂ්පාදන කැරූසල්',
@@ -3904,6 +3905,9 @@ return [
                 'featured' => 'දැක්ක',
                 'filter-title' => 'මාතෘකාව',
                 'filters' => 'ශ්‍රිත',
+                'flash-sale' => 'ෆ්ලෑෂ් සේල්',
+                'flash-sale-description' => 'ෆ්ලෑෂ් සේල් කොටසේ පෙන්වීමට නිෂ්පාදන තෝරන්න, අනුපිළිවෙල සකසන්න ඇදගෙන යන්න.',
+                'flash-sale-subtitle' => 'උපශීර්ෂය',
                 'footer-link' => 'පිටු සල්ලි',
                 'footer-link-description' => 'සුබුසුවේදී වෙබ්‌වෙබ් සොයාගත කිරීමට සිවිල්ලාට සපයා ගන්න.',
                 'footer-link-form-title' => 'පිටු සල්ලි',

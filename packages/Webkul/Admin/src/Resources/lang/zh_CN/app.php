@@ -3874,6 +3874,7 @@ return [
 
                 'type' => [
                     'category-carousel' => '类别轮播',
+                    'flash-sale' => '限时抢购',
                     'footer-links' => '页脚链接',
                     'image-carousel' => '图像轮播',
                     'product-carousel' => '产品轮播',
@@ -3904,6 +3905,9 @@ return [
                 'featured' => '精选',
                 'filter-title' => '标题',
                 'filters' => '过滤器',
+                'flash-sale' => '限时抢购',
+                'flash-sale-description' => '挑选要在限时抢购版块展示的商品，并拖动排序。',
+                'flash-sale-subtitle' => '副标题',
                 'footer-link' => '页脚链接',
                 'footer-link-description' => '通过页脚链接无缝浏览网站和获取信息。',
                 'footer-link-form-title' => '页脚链接',

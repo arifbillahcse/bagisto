@@ -446,6 +446,122 @@
             padding: 20px;
         }
 
+        /* ============ 1b. FLASH SALE ============ */
+        .tz-flash {
+            padding: 34px 0 10px;
+            background: #f4f7fa;
+        }
+
+        .tz-flash__heading {
+            margin: 0 0 14px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--tz-navy);
+        }
+
+        .tz-flash__panel {
+            background: #ffffff;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .tz-flash__bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 16px 20px;
+            border-bottom: 1px solid #ececec;
+        }
+
+        .tz-flash__subtitle {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #f57224;
+        }
+
+        .tz-flash__all {
+            padding: 8px 18px;
+            border: 1px solid #f57224;
+            border-radius: 3px;
+            font-size: .82rem;
+            font-weight: 700;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            color: #f57224;
+            white-space: nowrap;
+            transition: background .15s ease, color .15s ease;
+        }
+
+        .tz-flash__all:hover {
+            background: #f57224;
+            color: #ffffff;
+        }
+
+        /* Horizontal rail: scrolls on narrow screens instead of wrapping. */
+        .tz-flash__track {
+            display: flex;
+            gap: 2px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .tz-flash__track::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tz-flash__card {
+            flex: 0 0 200px;
+            display: block;
+            padding: 12px;
+            background: #ffffff;
+            transition: box-shadow .15s ease;
+        }
+
+        .tz-flash__card:hover {
+            box-shadow: 0 5px 14px rgba(0, 0, 0, .12);
+        }
+
+        .tz-flash__img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: contain;
+        }
+
+        .tz-flash__name {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            margin-top: 10px;
+            min-height: 2.6em;
+            font-size: .88rem;
+            line-height: 1.3;
+            color: var(--tz-navy);
+        }
+
+        .tz-flash__price {
+            display: block;
+            margin-top: 6px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #f57224;
+        }
+
+        .tz-flash__meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 2px;
+            font-size: .78rem;
+            color: #9ca3af;
+        }
+
+        .tz-flash__off {
+            font-weight: 600;
+        }
+
         /* ============ 2. BRAND STRIP ============ */
         .tz-brands {
             padding: 44px 0;
@@ -941,6 +1057,103 @@
             </div>
         </div>
     </section>
+
+    {{--
+        Flash Sale - products are hand-picked in
+        Admin -> Settings -> Themes -> Create Theme (Type: Flash Sale).
+
+        Only the product IDs are stored, in the order the admin dragged them
+        into, so they are re-fetched here and re-sorted back into that order
+        (the DB returns them by id, not by the admin's arrangement).
+    --}}
+    @php
+        $flashSale = collect($customizations)->firstWhere('type', 'flash_sale');
+
+        $flashSaleOptions = $flashSale?->options ?? [];
+
+        $flashSaleProductIds = array_values($flashSaleOptions['product_ids'] ?? []);
+
+        $flashSaleProducts = collect();
+
+        if ($flashSaleProductIds) {
+            $found = app(\Webkul\Product\Repositories\ProductRepository::class)
+                ->with(['images', 'price_indices'])
+                ->findWhereIn('id', $flashSaleProductIds)
+                ->keyBy('id');
+
+            $flashSaleProducts = collect($flashSaleProductIds)
+                ->map(fn ($productId) => $found->get($productId))
+                ->filter(fn ($product) => $product?->status)
+                ->values();
+        }
+    @endphp
+
+    @if ($flashSaleProducts->isNotEmpty())
+        <section class="tz-flash">
+            <div class="tz-container">
+                <h2 class="tz-flash__heading">{{ $flashSaleOptions['title'] ?? 'Flash Sale' }}</h2>
+
+                <div class="tz-flash__panel">
+                    <div class="tz-flash__bar">
+                        <span class="tz-flash__subtitle">{{ $flashSaleOptions['subtitle'] ?? '' }}</span>
+
+                        @if (! empty($flashSaleOptions['view_all_url']))
+                            <a
+                                href="{{ $flashSaleOptions['view_all_url'] }}"
+                                class="tz-flash__all"
+                            >
+                                @lang('shop::app.components.products.carousel.view-all')
+                            </a>
+                        @endif
+                    </div>
+
+                    <div class="tz-flash__track">
+                        @foreach ($flashSaleProducts as $product)
+                            @php
+                                $typeInstance = $product->getTypeInstance();
+
+                                $priceIndex = $typeInstance->getPriceIndex();
+
+                                $hasDiscount = $typeInstance->haveDiscount();
+
+                                $discountPercent = $hasDiscount && $priceIndex?->regular_min_price > 0
+                                    ? (int) round(100 - ($priceIndex->min_price / $priceIndex->regular_min_price * 100))
+                                    : 0;
+
+                                $baseImage = product_image()->getProductBaseImage($product);
+                            @endphp
+
+                            <a
+                                href="{{ route('shop.product_or_category.index', $product->url_key) }}"
+                                class="tz-flash__card"
+                            >
+                                <img
+                                    class="tz-flash__img"
+                                    src="{{ $baseImage['medium_image_url'] }}"
+                                    alt="{{ $product->name }}"
+                                    loading="lazy"
+                                >
+
+                                <span class="tz-flash__name">{{ $product->name }}</span>
+
+                                <span class="tz-flash__price">
+                                    {{ core()->formatPrice($typeInstance->getMinimalPrice()) }}
+                                </span>
+
+                                @if ($discountPercent > 0)
+                                    <span class="tz-flash__meta">
+                                        <s class="tz-flash__was">{{ core()->formatPrice($priceIndex->regular_min_price) }}</s>
+
+                                        <span class="tz-flash__off">-{{ $discountPercent }}%</span>
+                                    </span>
+                                @endif
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </section>
+    @endif
 
     {{--
         Driven by an `image_carousel` theme customization named "Brands"

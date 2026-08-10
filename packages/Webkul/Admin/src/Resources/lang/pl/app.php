@@ -3874,6 +3874,7 @@ return [
 
                 'type' => [
                     'category-carousel' => 'Karuzela kategorii',
+                    'flash-sale' => 'Wyprzedaż Błyskawiczna',
                     'footer-links' => 'Linki stopki',
                     'image-carousel' => 'Karuzela obrazów',
                     'product-carousel' => 'Karuzela produktów',
@@ -3904,6 +3905,9 @@ return [
                 'featured' => 'Wyróżnione',
                 'filter-title' => 'Tytuł',
                 'filters' => 'Filtry',
+                'flash-sale' => 'Wyprzedaż Błyskawiczna',
+                'flash-sale-description' => 'Wybierz produkty do sekcji wyprzedaży błyskawicznej i przeciągnij, aby ustalić kolejność.',
+                'flash-sale-subtitle' => 'Podtytuł',
                 'footer-link' => 'Linki stopki',
                 'footer-link-description' => 'Nawiguj za pomocą linków stopki, aby swobodnie przeglądać witrynę i uzyskiwać informacje.',
                 'footer-link-form-title' => 'Link stopki',

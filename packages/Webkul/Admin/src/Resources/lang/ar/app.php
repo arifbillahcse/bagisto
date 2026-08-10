@@ -3874,6 +3874,7 @@ return [
 
                 'type' => [
                     'category-carousel' => 'شريط الفئات',
+                    'flash-sale' => 'تخفيضات سريعة',
                     'footer-links' => 'روابط التذييل',
                     'image-carousel' => 'عرض الصور',
                     'product-carousel' => 'شريط المنتجات',
@@ -3904,6 +3905,9 @@ return [
                 'featured' => 'مميز',
                 'filter-title' => 'العنوان',
                 'filters' => 'المرشحات',
+                'flash-sale' => 'تخفيضات سريعة',
+                'flash-sale-description' => 'اختر المنتجات التي تريد عرضها في قسم التخفيضات السريعة، واسحبها لترتيبها.',
+                'flash-sale-subtitle' => 'عنوان فرعي',
                 'footer-link' => 'روابط التذييل',
                 'footer-link-description' => 'انتقل عبر روابط التذييل لاستكشاف الموقع بسهولة والحصول على المعلومات.',
                 'footer-link-form-title' => 'رابط التذييل',
