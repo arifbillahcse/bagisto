@@ -353,6 +353,117 @@
         outline: none;
     }
 
+    /* Live search suggestions dropdown */
+    .rnj-suggest {
+        position: absolute;
+        top: calc(100% + 6px);
+        left: 0;
+        right: 0;
+        z-index: 40;
+        background: #ffffff;
+        border: 1px solid #e4e4e7;
+        border-radius: 10px;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, .12);
+        overflow: hidden;
+        max-height: 420px;
+        overflow-y: auto;
+    }
+
+    .rnj-suggest__loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+    }
+
+    .rnj-suggest__spinner {
+        width: 22px;
+        height: 22px;
+        border: 2px solid #e4e4e7;
+        border-top-color: var(--tz-accent, #29ABE2);
+        border-radius: 50%;
+        animation: rnj-suggest-spin .6s linear infinite;
+    }
+
+    @keyframes rnj-suggest-spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .rnj-suggest__item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        text-decoration: none;
+        color: #18181b;
+        border-bottom: 1px solid #f4f4f5;
+        transition: background-color .12s ease;
+    }
+
+    .rnj-suggest__item:last-of-type {
+        border-bottom: none;
+    }
+
+    .rnj-suggest__item:hover {
+        background-color: #f4f4f5;
+    }
+
+    .rnj-suggest__thumb {
+        flex: 0 0 auto;
+        width: 42px;
+        height: 42px;
+        object-fit: cover;
+        border-radius: 6px;
+        background: #f4f4f5;
+    }
+
+    .rnj-suggest__info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+    }
+
+    .rnj-suggest__name {
+        font-size: 13.5px;
+        font-weight: 500;
+        color: #18181b;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .rnj-suggest__price {
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--tz-accent, #29ABE2);
+    }
+
+    .rnj-suggest__viewall {
+        display: block;
+        padding: 12px 14px;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--tz-navy, #0B2540);
+        text-decoration: none;
+        background: #fafafa;
+        border-top: 1px solid #f4f4f5;
+    }
+
+    .rnj-suggest__viewall:hover {
+        text-decoration: underline;
+    }
+
+    .rnj-suggest__empty {
+        padding: 20px 14px;
+        text-align: center;
+        font-size: 13px;
+        color: #71717a;
+    }
+
     /* Right-hand actions */
     .rnj-actions {
         display: flex;

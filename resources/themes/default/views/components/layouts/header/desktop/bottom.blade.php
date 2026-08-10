@@ -40,49 +40,51 @@
 
     <!-- Search -->
     <div class="rnj-mainrow__search">
-        <form
-            action="{{ route('shop.search.index') }}"
-            class="rnj-search"
-            role="search"
-            toolname="search_products"
-            tooldescription="{{ trans('shop::app.components.layouts.webmcp.search-products') }}"
-            toolautosubmit
-        >
-            <label
-                for="organic-search"
-                class="sr-only"
+        <v-search-suggest>
+            <form
+                action="{{ route('shop.search.index') }}"
+                class="rnj-search"
+                role="search"
+                toolname="search_products"
+                tooldescription="{{ trans('shop::app.components.layouts.webmcp.search-products') }}"
+                toolautosubmit
             >
-                @lang('shop::app.components.layouts.header.desktop.bottom.search')
-            </label>
+                <label
+                    for="organic-search"
+                    class="sr-only"
+                >
+                    @lang('shop::app.components.layouts.header.desktop.bottom.search')
+                </label>
 
-            <div class="icon-search rnj-search__icon"></div>
+                <div class="icon-search rnj-search__icon"></div>
 
-            <input
-                type="text"
-                name="query"
-                value="{{ request('query') }}"
-                toolparamdescription="{{ trans('shop::app.components.layouts.webmcp.search-products-query') }}"
-                class="rnj-search__input"
-                minlength="{{ core()->getConfigData('catalog.products.search.min_query_length') }}"
-                maxlength="{{ core()->getConfigData('catalog.products.search.max_query_length') }}"
-                placeholder="@lang('shop::app.components.layouts.header.desktop.bottom.search-text')"
-                aria-label="@lang('shop::app.components.layouts.header.desktop.bottom.search-text')"
-                aria-required="true"
-                pattern="[^\\]+"
-                required
-            >
+                <input
+                    type="text"
+                    name="query"
+                    value="{{ request('query') }}"
+                    toolparamdescription="{{ trans('shop::app.components.layouts.webmcp.search-products-query') }}"
+                    class="rnj-search__input"
+                    minlength="{{ core()->getConfigData('catalog.products.search.min_query_length') }}"
+                    maxlength="{{ core()->getConfigData('catalog.products.search.max_query_length') }}"
+                    placeholder="@lang('shop::app.components.layouts.header.desktop.bottom.search-text')"
+                    aria-label="@lang('shop::app.components.layouts.header.desktop.bottom.search-text')"
+                    aria-required="true"
+                    pattern="[^\\]+"
+                    required
+                >
 
-            <button
-                type="submit"
-                class="hidden"
-                aria-label="@lang('shop::app.components.layouts.header.desktop.bottom.submit')"
-            >
-            </button>
+                <button
+                    type="submit"
+                    class="hidden"
+                    aria-label="@lang('shop::app.components.layouts.header.desktop.bottom.submit')"
+                >
+                </button>
 
-            @if (core()->getConfigData('catalog.products.settings.image_search'))
-                @include('shop::search.images.index')
-            @endif
-        </form>
+                @if (core()->getConfigData('catalog.products.settings.image_search'))
+                    @include('shop::search.images.index')
+                @endif
+            </form>
+        </v-search-suggest>
     </div>
 
     {!! view_render_event('bagisto.shop.components.layouts.header.desktop.bottom.search_bar.after') !!}
@@ -434,6 +436,234 @@
                         .catch(error => {
                             console.log(error);
                         });
+                },
+            },
+        });
+    </script>
+
+    {{--
+        Live search suggestions.
+
+        Enhances the plain search form above with a debounced dropdown of
+        matching products, fetched from the existing product listing API
+        (the same endpoint the homepage carousels already use) -- no new
+        backend route needed. Falls back to the plain form (visible above,
+        light-DOM) until Vue mounts, and the form's normal submit/Enter-key
+        behaviour is left completely untouched.
+    --}}
+    <script
+        type="text/x-template"
+        id="v-search-suggest-template"
+    >
+        <form
+            action="{{ route('shop.search.index') }}"
+            class="rnj-search"
+            role="search"
+            toolname="search_products"
+            tooldescription="{{ trans('shop::app.components.layouts.webmcp.search-products') }}"
+            toolautosubmit
+            @submit="closeDropdown"
+        >
+            <label
+                for="organic-search"
+                class="sr-only"
+            >
+                @lang('shop::app.components.layouts.header.desktop.bottom.search')
+            </label>
+
+            <div class="icon-search rnj-search__icon"></div>
+
+            <input
+                type="text"
+                name="query"
+                v-model="query"
+                toolparamdescription="{{ trans('shop::app.components.layouts.webmcp.search-products-query') }}"
+                class="rnj-search__input"
+                minlength="{{ core()->getConfigData('catalog.products.search.min_query_length') }}"
+                maxlength="{{ core()->getConfigData('catalog.products.search.max_query_length') }}"
+                placeholder="@lang('shop::app.components.layouts.header.desktop.bottom.search-text')"
+                aria-label="@lang('shop::app.components.layouts.header.desktop.bottom.search-text')"
+                aria-required="true"
+                autocomplete="off"
+                pattern="[^\\]+"
+                required
+                @input="onInput"
+                @focus="onFocus"
+                @keydown.escape="closeDropdown"
+            >
+
+            <button
+                type="submit"
+                class="hidden"
+                aria-label="@lang('shop::app.components.layouts.header.desktop.bottom.submit')"
+            >
+            </button>
+
+            @if (core()->getConfigData('catalog.products.settings.image_search'))
+                @include('shop::search.images.index')
+            @endif
+
+            <!-- Suggestions Dropdown -->
+            <div
+                class="rnj-suggest"
+                v-if="isOpen"
+            >
+                <div
+                    class="rnj-suggest__loading"
+                    v-if="isLoading"
+                >
+                    <span class="rnj-suggest__spinner"></span>
+                </div>
+
+                <template v-else>
+                    <a
+                        class="rnj-suggest__item"
+                        v-for="product in suggestions"
+                        :key="product.id"
+                        :href="'{{ route('shop.product_or_category.index', ':slug') }}'.replace(':slug', product.url_key)"
+                    >
+                        <img
+                            class="rnj-suggest__thumb"
+                            :src="product.base_image.small_image_url"
+                            :alt="product.name"
+                            loading="lazy"
+                        >
+
+                        <span class="rnj-suggest__info">
+                            <span
+                                class="rnj-suggest__name"
+                                v-text="product.name"
+                            ></span>
+
+                            <span
+                                class="rnj-suggest__price"
+                                v-html="product.price_html || product.min_price"
+                            ></span>
+                        </span>
+                    </a>
+
+                    <a
+                        class="rnj-suggest__viewall"
+                        v-if="suggestions.length"
+                        :href="viewAllUrl"
+                    >
+                        @lang('shop::app.components.layouts.header.desktop.bottom.search-view-all-prefix') "@{{ query }}"
+                    </a>
+
+                    <div
+                        class="rnj-suggest__empty"
+                        v-if="! suggestions.length"
+                    >
+                        @lang('shop::app.components.layouts.header.desktop.bottom.search-no-results')
+                    </div>
+                </template>
+            </div>
+        </form>
+    </script>
+
+    <script type="module">
+        app.component('v-search-suggest', {
+            template: '#v-search-suggest-template',
+
+            data() {
+                return {
+                    query: {!! json_encode(request('query', '')) !!},
+
+                    suggestions: [],
+
+                    isLoading: false,
+
+                    isOpen: false,
+
+                    minLength: {{ (int) core()->getConfigData('catalog.products.search.min_query_length') ?: 2 }},
+
+                    debounceTimer: null,
+                };
+            },
+
+            computed: {
+                viewAllUrl() {
+                    return "{{ route('shop.search.index') }}?query=" + encodeURIComponent(this.query);
+                },
+            },
+
+            mounted() {
+                document.addEventListener('click', this.onClickOutside);
+            },
+
+            beforeUnmount() {
+                document.removeEventListener('click', this.onClickOutside);
+            },
+
+            methods: {
+                onInput() {
+                    clearTimeout(this.debounceTimer);
+
+                    if (this.query.trim().length < this.minLength) {
+                        this.suggestions = [];
+                        this.isOpen = false;
+                        return;
+                    }
+
+                    this.debounceTimer = setTimeout(() => this.fetchSuggestions(), 300);
+                },
+
+                onFocus() {
+                    if (this.query.trim().length >= this.minLength) {
+                        this.isOpen = true;
+
+                        if (! this.suggestions.length) {
+                            this.fetchSuggestions();
+                        }
+                    }
+                },
+
+                fetchSuggestions() {
+                    const requestedQuery = this.query;
+
+                    this.isLoading = true;
+                    this.isOpen = true;
+
+                    /**
+                     * `suggest=1` keeps core's spell-correction on (only '0'
+                     * disables it) while adding a second counted parameter:
+                     * core records a search term only when `query` is the sole
+                     * one (`mode`/`sort`/`limit` are excluded from that check),
+                     * which would otherwise log a row for every partial
+                     * keystroke and skew the popular-search report.
+                     */
+                    this.$axios.get("{{ route('shop.api.products.index') }}", {
+                        params: {
+                            query: requestedQuery,
+                            limit: 6,
+                            suggest: 1,
+                        },
+                    })
+                        .then(response => {
+                            // Ignore stale responses from an earlier keystroke.
+                            if (requestedQuery !== this.query) {
+                                return;
+                            }
+
+                            this.suggestions = response.data.data ?? [];
+                            this.isLoading = false;
+                        })
+                        .catch(() => {
+                            if (requestedQuery === this.query) {
+                                this.isLoading = false;
+                                this.suggestions = [];
+                            }
+                        });
+                },
+
+                closeDropdown() {
+                    this.isOpen = false;
+                },
+
+                onClickOutside(event) {
+                    if (this.isOpen && ! this.$el.contains(event.target)) {
+                        this.isOpen = false;
+                    }
                 },
             },
         });
