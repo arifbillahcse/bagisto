@@ -28,6 +28,107 @@
     @endif
 @endpush
 
+@pushOnce('scripts')
+    <script
+        type="text/x-template"
+        id="v-hero-slider-template"
+    >
+        <div>
+            <div
+                class="tz-hero2__track"
+                :style="{ transform: 'translateX(-' + (currentIndex * 100) + '%)' }"
+            >
+                <a
+                    class="tz-hero2__slide tz-hero2__link"
+                    v-for="(slide, index) in slides"
+                    :key="index"
+                    :href="slide.link || '#'"
+                >
+                    <img
+                        class="tz-hero2__img"
+                        :src="slide.image"
+                        :alt="slide.title || ('Slide ' + (index + 1))"
+                        :loading="index === 0 ? 'eager' : 'lazy'"
+                    />
+                </a>
+            </div>
+
+            <template v-if="slides.length > 1">
+                <button
+                    type="button"
+                    class="tz-hero2__nav tz-hero2__nav--prev"
+                    aria-label="Previous slide"
+                    @click.prevent="go(currentIndex - 1)"
+                >&#8592;</button>
+
+                <button
+                    type="button"
+                    class="tz-hero2__nav tz-hero2__nav--next"
+                    aria-label="Next slide"
+                    @click.prevent="go(currentIndex + 1)"
+                >&#8594;</button>
+
+                <div class="tz-hero2__dots">
+                    <button
+                        type="button"
+                        class="tz-hero2__dot"
+                        :class="{ 'tz-hero2__dot--active': index === currentIndex }"
+                        v-for="(slide, index) in slides"
+                        :key="index"
+                        :aria-label="'Go to slide ' + (index + 1)"
+                        @click.prevent="go(index)"
+                    ></button>
+                </div>
+            </template>
+        </div>
+    </script>
+
+    <script type="module">
+        app.component('v-hero-slider', {
+            template: '#v-hero-slider-template',
+
+            props: ['slides'],
+
+            data() {
+                return {
+                    currentIndex: 0,
+                    timer: null,
+                };
+            },
+
+            mounted() {
+                this.play();
+            },
+
+            beforeUnmount() {
+                clearInterval(this.timer);
+            },
+
+            methods: {
+                go(index) {
+                    const total = this.slides.length;
+
+                    this.currentIndex = (index + total) % total;
+
+                    this.play();
+                },
+
+                play() {
+                    clearInterval(this.timer);
+
+                    if (this.slides.length < 2) {
+                        return;
+                    }
+
+                    this.timer = setInterval(() => {
+                        this.currentIndex = (this.currentIndex + 1) % this.slides.length;
+                    }, 5000);
+                },
+            },
+        });
+    </script>
+@endPushOnce
+
 {{--
     All homepage styles are scoped under the .tz- prefix and pushed to the
     layout's @stack('styles') slot (renders after the compiled app.css).
@@ -86,7 +187,140 @@
             color: #ffffff;
         }
 
-        /* ============ 1. HERO ============ */
+        /* ============ 1. HERO: slider + fixed banner ============ */
+        .tz-hero2 {
+            background: linear-gradient(180deg, #fbfcfd 0%, #f2f6f9 100%);
+            padding: 24px 0 32px;
+        }
+
+        .tz-hero2__grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        .tz-hero2__panel {
+            position: relative;
+            overflow: hidden;
+            border-radius: 14px;
+            background-color: #ffffff;
+        }
+
+        .tz-hero2__link {
+            display: block;
+            height: 100%;
+        }
+
+        .tz-hero2__img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            aspect-ratio: 2.4 / 1;
+        }
+
+        /* The banner column is half the width, so it needs a taller ratio to match */
+        .tz-hero2__panel:last-child .tz-hero2__img {
+            aspect-ratio: 1.18 / 1;
+        }
+
+        .tz-hero2__empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            min-height: 240px;
+            padding: 28px;
+            text-align: center;
+            font-size: .875rem;
+            line-height: 1.6;
+            color: var(--tz-muted);
+            border: 1px dashed var(--tz-border);
+            border-radius: 14px;
+        }
+
+        /* Slider chrome */
+        .tz-hero2__track {
+            display: flex;
+            transition: transform .6s ease-out;
+            will-change: transform;
+        }
+
+        .tz-hero2__slide {
+            flex: 0 0 100%;
+            width: 100%;
+        }
+
+        .tz-hero2__nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border: 0;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, .9);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .15);
+            color: #18181b;
+            font-size: 18px;
+            line-height: 1;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity .2s ease;
+        }
+
+        .tz-hero2__panel:hover .tz-hero2__nav {
+            opacity: 1;
+        }
+
+        .tz-hero2__nav--prev {
+            left: 12px;
+        }
+
+        .tz-hero2__nav--next {
+            right: 12px;
+        }
+
+        .tz-hero2__dots {
+            position: absolute;
+            bottom: 14px;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            gap: 7px;
+            width: 100%;
+        }
+
+        .tz-hero2__dot {
+            width: 9px;
+            height: 9px;
+            padding: 0;
+            border: 0;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, .55);
+            cursor: pointer;
+            transition: background-color .2s ease;
+        }
+
+        .tz-hero2__dot--active {
+            background-color: #ffffff;
+        }
+
+        @media (max-width: 900px) {
+            .tz-hero2__grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tz-hero2__panel:last-child .tz-hero2__img {
+                aspect-ratio: 2.4 / 1;
+            }
+        }
+
+        /* ============ 1b. LEGACY HERO (unused, kept for reference) ============ */
         .tz-hero {
             background:
                 linear-gradient(180deg, #fbfcfd 0%, #f2f6f9 100%);
@@ -633,47 +867,77 @@
 
     {!! view_render_event('bagisto.shop.home.content.before') !!}
 
-    <!-- ============ 1. HERO ============ -->
-    <section class="tz-hero">
+    <!-- ============ 1. HERO: slider + fixed offer banner ============ -->
+    @php
+        /**
+         * Both panels are driven by `image_carousel` theme customizations matched
+         * on their NAME, so slides and the banner are managed from
+         * Admin -> Settings -> Themes -> Create Theme (Type: Image Carousel):
+         *
+         *   "Hero Slider"  - every image becomes a rotating slide on the left.
+         *   "Offer Banner" - the FIRST image is shown as the static right panel.
+         *
+         * Bagisto's own <x-shop::carousel> is not reused here because it sizes
+         * slides from window.innerWidth, which breaks inside a half-width column.
+         */
+        $heroCarousels = collect($customizations)->where('type', 'image_carousel');
+
+        $heroSliderRecord = $heroCarousels->firstWhere('name', 'Hero Slider')
+            ?? $heroCarousels->first();
+
+        $heroSlides = collect($heroSliderRecord?->options['images'] ?? [])
+            ->filter(fn ($slide) => ! empty($slide['image']))
+            ->values();
+
+        $heroBanner = collect($heroCarousels->firstWhere('name', 'Offer Banner')?->options['images'] ?? [])
+            ->firstWhere('image', '!=', null);
+    @endphp
+
+    <section class="tz-hero2">
         <div class="tz-container">
-            <div class="tz-hero__inner">
-                <!-- All-categories box (real category tree from the controller) -->
-                <div class="tz-hero__categories">
-                    <p class="tz-hero__categories-title">All Categories</p>
-
-                    <ul>
-                        @foreach (collect($categories)->take(6) as $category)
-                            <li>
-                                <a href="{{ url($category->url ?? $category->slug) }}">
-                                    {{ $category->name }}
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
+            <div class="tz-hero2__grid">
+                <!-- Rotating slider -->
+                <div class="tz-hero2__panel">
+                    @if ($heroSlides->isNotEmpty())
+                        <v-hero-slider :slides="{{ json_encode($heroSlides->values()) }}">
+                            {{-- Server-rendered first slide so it paints before Vue mounts --}}
+                            <a
+                                href="{{ ($heroSlides->first()['link'] ?? '') ?: '#' }}"
+                                class="tz-hero2__link"
+                            >
+                                <img
+                                    src="{{ $heroSlides->first()['image'] }}"
+                                    alt="{{ $heroSlides->first()['title'] ?? 'Offer' }}"
+                                    class="tz-hero2__img"
+                                    fetchpriority="high"
+                                />
+                            </a>
+                        </v-hero-slider>
+                    @else
+                        <div class="tz-hero2__empty">
+                            Create an <strong>Image Carousel</strong> named <strong>“Hero Slider”</strong> in the admin panel to show slides here.
+                        </div>
+                    @endif
                 </div>
 
-                <!-- Headline -->
-                <div class="tz-hero__content">
-                    <p class="tz-hero__eyebrow">{{ $channel->name }}</p>
-
-                    <h1 class="tz-hero__heading">
-                        Smooth, Sleek &amp; Easy to Use Products
-                    </h1>
-
-                    <a
-                        href="{{ route('shop.search.index') }}"
-                        class="tz-btn"
-                    >
-                        Shop Now
-                    </a>
-                </div>
-
-                <!-- Circular hero image (placeholder until you provide one) -->
-                <div class="tz-hero__media">
-                    <div class="tz-hero__media-circle">
-                        {{-- Replace this placeholder with: <img src="..." alt="Featured product" /> --}}
-                        <p class="tz-hero__media-placeholder">Hero product image goes here</p>
-                    </div>
+                <!-- Fixed offer banner -->
+                <div class="tz-hero2__panel">
+                    @if ($heroBanner)
+                        <a
+                            href="{{ ($heroBanner['link'] ?? '') ?: '#' }}"
+                            class="tz-hero2__link"
+                        >
+                            <img
+                                src="{{ $heroBanner['image'] }}"
+                                alt="{{ $heroBanner['title'] ?? 'Offer' }}"
+                                class="tz-hero2__img"
+                            />
+                        </a>
+                    @else
+                        <div class="tz-hero2__empty">
+                            Create an <strong>Image Carousel</strong> named <strong>“Offer Banner”</strong> in the admin panel to show a banner here.
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
