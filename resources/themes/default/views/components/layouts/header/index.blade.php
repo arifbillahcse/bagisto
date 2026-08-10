@@ -392,8 +392,28 @@
 
     /* The mini-cart renders its own icon + badge; align it like the others */
     .rnj-action--cart .icon-cart {
-        font-size: 22px;
-        line-height: 1;
+        font-size: 22px !important;
+        line-height: 1 !important;
+    }
+
+    /*
+     * The item-count badge is a Tailwind-styled pill sized for the core
+     * cart page, which reads oversized next to the plain header icons.
+     * Shrink it into a small, tight corner badge instead.
+     */
+    .rnj-action--cart .relative > .absolute {
+        top: -6px !important;
+        left: auto !important;
+        right: auto !important;
+        inset-inline-end: -8px !important;
+        min-width: 16px !important;
+        height: 16px !important;
+        padding: 0 4px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 10px !important;
+        line-height: 1 !important;
     }
 
     @media (max-width: 1180px) {
