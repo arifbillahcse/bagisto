@@ -55,14 +55,226 @@
     }
 
     /**
-     * Shared inline styles. Structure is expressed inline rather than through a
-     * class so the rows survive a stale or missing stylesheet; the <style> block
-     * further down only adds hover colours and breakpoints.
+     * The utility bar keeps its structure in inline styles so it renders
+     * correctly even before the stylesheet in the `scripts` stack is parsed.
      */
     $sTopLink = 'font-size:13px;color:#ffffff;text-decoration:none;white-space:nowrap;';
 @endphp
 
-<style>
+<!-- Utility bar -->
+<div
+    id="rnjTopBar"
+    style="background-color:#F4511E;color:#ffffff;"
+>
+    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;max-width:1600px;margin-left:auto;margin-right:auto;padding:8px 60px;">
+        <!-- Contact details -->
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:20px;">
+            @foreach ($topBarContact as $contact)
+                <a
+                    href="{{ $contact['url'] }}"
+                    style="{{ $sTopLink }}display:inline-flex;align-items:center;gap:7px;"
+                >
+                    @if (str_starts_with($contact['url'], 'mailto:'))
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="15"
+                            height="15"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="#ffffff"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            style="display:block;width:15px;height:15px;min-width:15px;flex:0 0 15px;"
+                        >
+                            <rect x="2" y="4" width="20" height="16" rx="2" />
+                            <path d="M22 6l-10 7L2 6" />
+                        </svg>
+                    @else
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="15"
+                            height="15"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="#ffffff"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            style="display:block;width:15px;height:15px;min-width:15px;flex:0 0 15px;"
+                        >
+                            <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                    @endif
+
+                    {{ $contact['title'] }}
+                </a>
+            @endforeach
+        </div>
+
+        <!-- Utility links -->
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:24px;">
+            @foreach ($topBarLinks as $link)
+                <a
+                    href="{{ $link['url'] }}"
+                    style="{{ $sTopLink }}"
+                >
+                    {{ $link['title'] }}
+                </a>
+            @endforeach
+        </div>
+    </div>
+</div>
+
+@if(core()->getCurrentChannel()->locales()->count() > 1 || core()->getCurrentChannel()->currencies()->count() > 1 )
+    <div class="max-lg:hidden">
+        <x-shop::layouts.header.desktop.top />
+    </div>
+@endif
+
+<header class="shadow-gray sticky top-0 z-10 bg-white shadow-sm max-lg:shadow-none">
+    <v-header-switcher>
+        <!-- Desktop Header Shimmer -->
+        <div class="flex flex-wrap max-lg:hidden">
+            <div class="flex min-h-[78px] w-full justify-between border border-b border-l-0 border-r-0 border-t-0 px-[60px] max-1180:px-8">
+                <!-- Left Navigation Section -->
+                <div class="flex items-center gap-x-10 max-[1180px]:gap-x-5">
+                    <!-- Logo Shimmer -->
+                    <span
+                        class="shimmer block h-[29px] w-[131px] rounded"
+                        role="presentation"
+                    >
+                    </span>
+
+                    <!-- Categories Shimmer -->
+                    <div class="flex items-center gap-5">
+                        <span
+                            class="shimmer h-6 w-20 rounded"
+                            role="presentation"
+                        >
+                        </span>
+
+                        <span
+                            class="shimmer h-6 w-20 rounded"
+                            role="presentation"
+                        >
+                        </span>
+
+                        <span
+                            class="shimmer h-6 w-20 rounded"
+                            role="presentation"
+                        >
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Right Navigation Section -->
+                <div class="flex items-center gap-x-9 max-[1100px]:gap-x-6 max-lg:gap-x-8">
+                    <!-- Search Bar Shimmer -->
+                    <div class="relative w-full max-w-[445px]">
+                        <span
+                            class="shimmer block h-[42px] w-[250px] rounded-lg px-11 py-3"
+                            role="presentation"
+                        >
+                        </span>
+                    </div>
+
+                    <!-- Right Navigation Icons Shimmer -->
+                    <div class="mt-1.5 flex gap-x-8 max-[1100px]:gap-x-6 max-lg:gap-x-8">
+                        <!-- Compare Icon Shimmer -->
+                        <span
+                            class="shimmer h-6 w-6 rounded"
+                            role="presentation"
+                        >
+                        </span>
+
+                        <!-- Cart Icon Shimmer -->
+                        <span
+                            class="shimmer h-6 w-6 rounded"
+                            role="presentation"
+                        >
+                        </span>
+
+                        <!-- Profile Icon Shimmer -->
+                        <span
+                            class="shimmer h-6 w-6 rounded"
+                            role="presentation"
+                        >
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Header Shimmer -->
+        <div class="flex flex-wrap gap-4 px-4 pb-4 pt-6 shadow-sm lg:hidden">
+            <div class="flex w-full items-center justify-between">
+                <!-- Left Navigation -->
+                <div class="flex items-center gap-x-1.5">
+                    <!-- Hamburger Menu Shimmer -->
+                    <span
+                        class="shimmer block h-6 w-6 rounded"
+                        role="presentation"
+                    >
+                    </span>
+
+                    <!-- Logo Shimmer -->
+                    <span
+                        class="shimmer block h-[29px] w-[131px] rounded"
+                        role="presentation"
+                    >
+                    </span>
+                </div>
+
+                <!-- Right Navigation Icons -->
+                <div class="flex items-center gap-x-5 max-md:gap-x-4">
+                    <!-- Compare Icon Shimmer -->
+                    <span
+                        class="shimmer block h-6 w-6 rounded"
+                        role="presentation"
+                    >
+                    </span>
+
+                    <!-- Cart Icon Shimmer -->
+                    <span
+                        class="shimmer block h-6 w-6 rounded"
+                        role="presentation"
+                    >
+                    </span>
+
+                    <!-- Profile Icon Shimmer -->
+                    <span
+                        class="shimmer block h-6 w-6 rounded"
+                        role="presentation"
+                    >
+                    </span>
+                </div>
+            </div>
+
+            <!-- Search Bar Shimmer -->
+            <div class="flex w-full items-center">
+                <div class="relative w-full">
+                    <span
+                        class="shimmer block h-[42px] w-full rounded-xl px-11 py-3.5 max-md:rounded-lg"
+                        role="presentation"
+                    >
+                    </span>
+                </div>
+            </div>
+        </div>
+    </v-header-switcher>
+</header>
+
+{!! view_render_event('bagisto.shop.layout.header.after') !!}
+
+@pushOnce('scripts')
+    {{--
+        These rules are emitted through the `scripts` stack because that stack
+        renders AFTER the closing </div> of #app. A <style> tag placed inside
+        #app is parsed by Vue as part of the root template and never reaches the
+        document, which is why the header rows rendered unstyled.
+    --}}
+    <style>
     #rnjTopBar a:hover {
         opacity: .8;
     }
@@ -320,215 +532,8 @@
             font-size: 13px;
         }
     }
-</style>
+    </style>
 
-<!-- Utility bar -->
-<div
-    id="rnjTopBar"
-    style="background-color:#F4511E;color:#ffffff;"
->
-    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;max-width:1600px;margin-left:auto;margin-right:auto;padding:8px 60px;">
-        <!-- Contact details -->
-        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:20px;">
-            @foreach ($topBarContact as $contact)
-                <a
-                    href="{{ $contact['url'] }}"
-                    style="{{ $sTopLink }}display:inline-flex;align-items:center;gap:7px;"
-                >
-                    @if (str_starts_with($contact['url'], 'mailto:'))
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="15"
-                            height="15"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="#ffffff"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            style="display:block;width:15px;height:15px;min-width:15px;flex:0 0 15px;"
-                        >
-                            <rect x="2" y="4" width="20" height="16" rx="2" />
-                            <path d="M22 6l-10 7L2 6" />
-                        </svg>
-                    @else
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="15"
-                            height="15"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="#ffffff"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            style="display:block;width:15px;height:15px;min-width:15px;flex:0 0 15px;"
-                        >
-                            <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                        </svg>
-                    @endif
-
-                    {{ $contact['title'] }}
-                </a>
-            @endforeach
-        </div>
-
-        <!-- Utility links -->
-        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:24px;">
-            @foreach ($topBarLinks as $link)
-                <a
-                    href="{{ $link['url'] }}"
-                    style="{{ $sTopLink }}"
-                >
-                    {{ $link['title'] }}
-                </a>
-            @endforeach
-        </div>
-    </div>
-</div>
-
-@if(core()->getCurrentChannel()->locales()->count() > 1 || core()->getCurrentChannel()->currencies()->count() > 1 )
-    <div class="max-lg:hidden">
-        <x-shop::layouts.header.desktop.top />
-    </div>
-@endif
-
-<header class="shadow-gray sticky top-0 z-10 bg-white shadow-sm max-lg:shadow-none">
-    <v-header-switcher>
-        <!-- Desktop Header Shimmer -->
-        <div class="flex flex-wrap max-lg:hidden">
-            <div class="flex min-h-[78px] w-full justify-between border border-b border-l-0 border-r-0 border-t-0 px-[60px] max-1180:px-8">
-                <!-- Left Navigation Section -->
-                <div class="flex items-center gap-x-10 max-[1180px]:gap-x-5">
-                    <!-- Logo Shimmer -->
-                    <span
-                        class="shimmer block h-[29px] w-[131px] rounded"
-                        role="presentation"
-                    >
-                    </span>
-
-                    <!-- Categories Shimmer -->
-                    <div class="flex items-center gap-5">
-                        <span
-                            class="shimmer h-6 w-20 rounded"
-                            role="presentation"
-                        >
-                        </span>
-
-                        <span
-                            class="shimmer h-6 w-20 rounded"
-                            role="presentation"
-                        >
-                        </span>
-
-                        <span
-                            class="shimmer h-6 w-20 rounded"
-                            role="presentation"
-                        >
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Right Navigation Section -->
-                <div class="flex items-center gap-x-9 max-[1100px]:gap-x-6 max-lg:gap-x-8">
-                    <!-- Search Bar Shimmer -->
-                    <div class="relative w-full max-w-[445px]">
-                        <span
-                            class="shimmer block h-[42px] w-[250px] rounded-lg px-11 py-3"
-                            role="presentation"
-                        >
-                        </span>
-                    </div>
-
-                    <!-- Right Navigation Icons Shimmer -->
-                    <div class="mt-1.5 flex gap-x-8 max-[1100px]:gap-x-6 max-lg:gap-x-8">
-                        <!-- Compare Icon Shimmer -->
-                        <span
-                            class="shimmer h-6 w-6 rounded"
-                            role="presentation"
-                        >
-                        </span>
-
-                        <!-- Cart Icon Shimmer -->
-                        <span
-                            class="shimmer h-6 w-6 rounded"
-                            role="presentation"
-                        >
-                        </span>
-
-                        <!-- Profile Icon Shimmer -->
-                        <span
-                            class="shimmer h-6 w-6 rounded"
-                            role="presentation"
-                        >
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mobile Header Shimmer -->
-        <div class="flex flex-wrap gap-4 px-4 pb-4 pt-6 shadow-sm lg:hidden">
-            <div class="flex w-full items-center justify-between">
-                <!-- Left Navigation -->
-                <div class="flex items-center gap-x-1.5">
-                    <!-- Hamburger Menu Shimmer -->
-                    <span
-                        class="shimmer block h-6 w-6 rounded"
-                        role="presentation"
-                    >
-                    </span>
-
-                    <!-- Logo Shimmer -->
-                    <span
-                        class="shimmer block h-[29px] w-[131px] rounded"
-                        role="presentation"
-                    >
-                    </span>
-                </div>
-
-                <!-- Right Navigation Icons -->
-                <div class="flex items-center gap-x-5 max-md:gap-x-4">
-                    <!-- Compare Icon Shimmer -->
-                    <span
-                        class="shimmer block h-6 w-6 rounded"
-                        role="presentation"
-                    >
-                    </span>
-
-                    <!-- Cart Icon Shimmer -->
-                    <span
-                        class="shimmer block h-6 w-6 rounded"
-                        role="presentation"
-                    >
-                    </span>
-
-                    <!-- Profile Icon Shimmer -->
-                    <span
-                        class="shimmer block h-6 w-6 rounded"
-                        role="presentation"
-                    >
-                    </span>
-                </div>
-            </div>
-
-            <!-- Search Bar Shimmer -->
-            <div class="flex w-full items-center">
-                <div class="relative w-full">
-                    <span
-                        class="shimmer block h-[42px] w-full rounded-xl px-11 py-3.5 max-md:rounded-lg"
-                        role="presentation"
-                    >
-                    </span>
-                </div>
-            </div>
-        </div>
-    </v-header-switcher>
-</header>
-
-{!! view_render_event('bagisto.shop.layout.header.after') !!}
-
-@pushOnce('scripts')
     <script
         type="text/x-template"
         id="v-header-switcher-template"
