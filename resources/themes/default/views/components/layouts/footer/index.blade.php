@@ -18,7 +18,7 @@
      * name, so those names are skipped here - otherwise the footer would render
      * whichever record happened to be created first.
      */
-    $reservedForHeader = ['Top Bar Contact', 'Top Bar Links', 'Header Links'];
+    $reservedForHeader = ['Top Bar Contact', 'Top Bar Links', 'Header Links', 'Chat Widgets'];
 
     $linkCustomization = $themeCustomizationRepository->findWhere([
         'type'       => 'footer_links',
@@ -57,6 +57,25 @@
     $footerCategories = collect($categoryRepository->getVisibleCategoryTree($channel->root_category_id))->take(6);
 
     /**
+     * Floating WhatsApp / Messenger chat buttons (Admin -> Settings -> Themes
+     * -> Create Theme, Type: Footer Links, Name: "Chat Widgets"). Add a link
+     * titled "WhatsApp" with a `https://wa.me/<countrycode><number>` URL
+     * and/or one titled "Messenger" with a `https://m.me/<page-username>`
+     * URL. Either (or both) can be left out -- only configured ones render.
+     */
+    $chatWidgetLinks = collect(
+        $themeCustomizationRepository->findWhere([
+            'type'       => 'footer_links',
+            'status'     => 1,
+            'theme_code' => $channel->theme,
+            'channel_id' => $channel->id,
+        ])->firstWhere('name', 'Chat Widgets')?->options ?? []
+    )->flatMap(fn ($section) => $section);
+
+    $whatsappLink = $chatWidgetLinks->first(fn ($link) => str_contains(strtolower($link['title'] ?? ''), 'whatsapp'));
+    $messengerLink = $chatWidgetLinks->first(fn ($link) => str_contains(strtolower($link['title'] ?? ''), 'messenger'));
+
+    /**
      * Every structural rule below is written as an inline style attribute so the
      * footer renders correctly even when no stylesheet reaches the browser.
      * The <style> block that follows only adds hover colours and responsive
@@ -72,6 +91,61 @@
     /* Enhancement only - the footer is fully laid out by inline styles above. */
     #shopFooter a:hover {
         color: #060C3B !important;
+    }
+
+    /* Floating WhatsApp / Messenger chat buttons */
+    .tz-chatwidgets {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    html[dir="rtl"] .tz-chatwidgets {
+        right: auto;
+        left: 24px;
+    }
+
+    .tz-chatwidgets__btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, .25);
+        transition: transform .15s ease;
+    }
+
+    .tz-chatwidgets__btn:hover {
+        transform: scale(1.08);
+    }
+
+    .tz-chatwidgets__btn--whatsapp {
+        background-color: #25D366;
+    }
+
+    .tz-chatwidgets__btn--messenger {
+        background-color: #0084FF;
+    }
+
+    @media (max-width: 640px) {
+        .tz-chatwidgets {
+            bottom: 16px;
+            right: 16px;
+        }
+
+        html[dir="rtl"] .tz-chatwidgets {
+            left: 16px;
+        }
+
+        .tz-chatwidgets__btn {
+            width: 48px;
+            height: 48px;
+        }
     }
 
     @media (max-width: 1024px) {
@@ -241,5 +315,49 @@
         {!! view_render_event('bagisto.shop.layout.footer.footer_text.after') !!}
     </div>
 </footer>
+
+@if ($whatsappLink || $messengerLink)
+    <div class="tz-chatwidgets">
+        @if ($whatsappLink)
+            <a
+                href="{{ $whatsappLink['url'] }}"
+                class="tz-chatwidgets__btn tz-chatwidgets__btn--whatsapp"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Chat on WhatsApp"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="#ffffff"
+                >
+                    <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 004.74 1.21h.005c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.87 9.87 0 0012.04 2zm5.8 14.1c-.24.68-1.4 1.33-1.94 1.4-.5.07-1.12.1-1.8-.11a16.6 16.6 0 01-1.65-.61c-2.9-1.25-4.79-4.17-4.93-4.36-.14-.19-1.18-1.57-1.18-3 0-1.42.75-2.12 1.02-2.41.27-.29.58-.36.78-.36l.56.01c.18.01.42-.07.66.5.24.58.82 2 .9 2.14.07.15.12.32.02.51-.1.19-.15.31-.3.48-.15.17-.31.38-.44.51-.15.15-.3.31-.13.6.17.29.75 1.24 1.62 2.01 1.11.99 2.05 1.3 2.34 1.44.29.15.46.13.63-.08.17-.2.72-.84.91-1.13.19-.29.38-.24.63-.14.26.1 1.65.78 1.94.92.29.14.48.21.55.33.07.12.07.68-.17 1.36z" />
+                </svg>
+            </a>
+        @endif
+
+        @if ($messengerLink)
+            <a
+                href="{{ $messengerLink['url'] }}"
+                class="tz-chatwidgets__btn tz-chatwidgets__btn--messenger"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Chat on Messenger"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="28"
+                    height="28"
+                    viewBox="0 0 24 24"
+                    fill="#ffffff"
+                >
+                    <path d="M12 2C6.48 2 2 6.15 2 11.27c0 2.91 1.44 5.51 3.7 7.21V22l3.38-1.86c.9.25 1.86.38 2.86.38 5.52 0 10-4.15 10-9.27S17.52 2 12 2zm1.02 12.48-2.55-2.72-4.98 2.72 5.48-5.82 2.61 2.72 4.9-2.72-5.46 5.82z" />
+                </svg>
+            </a>
+        @endif
+    </div>
+@endif
 
 {!! view_render_event('bagisto.shop.layout.footer.after') !!}
