@@ -973,6 +973,11 @@
         Each slide's image becomes a logo; its link is where the logo sends
         the customer -- point it at a brand-filtered catalog search URL,
         e.g. {{ route('shop.search.index') }}?brand=Nike
+
+        The section heading is optional and admin-editable too: create a
+        `Footer Links` theme customization named "Brand Strip Heading" with
+        a single link whose Title is the heading text (its URL is unused).
+        Falls back to "Shop by Brand" if that entry doesn't exist.
     --}}
     @php
         $brandRecord = collect($customizations)->where('type', 'image_carousel')->firstWhere('name', 'Brands');
@@ -980,13 +985,19 @@
         $brandLogos = collect($brandRecord?->options['images'] ?? [])
             ->filter(fn ($logo) => ! empty($logo['image']))
             ->values();
+
+        $brandHeadingRecord = collect($customizations)->where('type', 'footer_links')->firstWhere('name', 'Brand Strip Heading');
+
+        $brandHeading = collect($brandHeadingRecord?->options ?? [])
+            ->flatMap(fn ($column) => $column)
+            ->first()['title'] ?? 'Shop by Brand';
     @endphp
 
     <!-- ============ 7a. BRAND STRIP ============ -->
     <section class="tz-brands">
         <div class="tz-container">
             @if ($brandLogos->isNotEmpty())
-                <h2 class="tz-section-title">Shop by Brand</h2>
+                <h2 class="tz-section-title">{{ $brandHeading }}</h2>
 
                 <div class="tz-brands__inner">
                     @foreach ($brandLogos as $logo)
