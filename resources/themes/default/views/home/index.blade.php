@@ -498,68 +498,11 @@
             color: #ffffff;
         }
 
-        /* Horizontal rail: scrolls on narrow screens instead of wrapping. */
+        /* Rail wraps the native product-card component; padded to give the
+           left/right arrow buttons room. */
         .tz-flash__track {
-            display: flex;
-            gap: 2px;
-            overflow-x: auto;
-            scrollbar-width: none;
-        }
-
-        .tz-flash__track::-webkit-scrollbar {
-            display: none;
-        }
-
-        .tz-flash__card {
-            flex: 0 0 200px;
-            display: block;
-            padding: 12px;
-            background: #ffffff;
-            transition: box-shadow .15s ease;
-        }
-
-        .tz-flash__card:hover {
-            box-shadow: 0 5px 14px rgba(0, 0, 0, .12);
-        }
-
-        .tz-flash__img {
-            display: block;
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            object-fit: contain;
-        }
-
-        .tz-flash__name {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            margin-top: 10px;
-            min-height: 2.6em;
-            font-size: .88rem;
-            line-height: 1.3;
-            color: var(--tz-navy);
-        }
-
-        .tz-flash__price {
-            display: block;
-            margin-top: 6px;
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: #f57224;
-        }
-
-        .tz-flash__meta {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 2px;
-            font-size: .78rem;
-            color: #9ca3af;
-        }
-
-        .tz-flash__off {
-            font-weight: 600;
+            position: relative;
+            padding: 16px 20px 20px;
         }
 
         /* ============ 2. BRAND STRIP ============ */
@@ -945,6 +888,13 @@
                 ->filter(fn ($product) => $product?->status)
                 ->values();
         }
+
+        /**
+         * Rendered with the same `x-shop::products.card` component (and the
+         * same JSON shape) used by the native product carousels, so the
+         * flash sale cards look identical to "Our Popular Products" etc.
+         */
+        $flashSaleCardProducts = \Webkul\Shop\Http\Resources\ProductCardResource::collection($flashSaleProducts)->resolve();
     @endphp
 
     @if ($flashSaleProducts->isNotEmpty())
@@ -966,53 +916,81 @@
                         @endif
                     </div>
 
-                    <div class="tz-flash__track">
-                        @foreach ($flashSaleProducts as $product)
-                            @php
-                                $typeInstance = $product->getTypeInstance();
-
-                                $priceIndex = $typeInstance->getPriceIndex();
-
-                                $hasDiscount = $typeInstance->haveDiscount();
-
-                                $discountPercent = $hasDiscount && $priceIndex?->regular_min_price > 0
-                                    ? (int) round(100 - ($priceIndex->min_price / $priceIndex->regular_min_price * 100))
-                                    : 0;
-
-                                $baseImage = product_image()->getProductBaseImage($product);
-                            @endphp
-
-                            <a
-                                href="{{ route('shop.product_or_category.index', $product->url_key) }}"
-                                class="tz-flash__card"
-                            >
-                                <img
-                                    class="tz-flash__img"
-                                    src="{{ $baseImage['medium_image_url'] }}"
-                                    alt="{{ $product->name }}"
-                                    loading="lazy"
-                                >
-
-                                <span class="tz-flash__name">{{ $product->name }}</span>
-
-                                <span class="tz-flash__price">
-                                    {{ core()->formatPrice($typeInstance->getMinimalPrice()) }}
-                                </span>
-
-                                @if ($discountPercent > 0)
-                                    <span class="tz-flash__meta">
-                                        <s class="tz-flash__was">{{ core()->formatPrice($priceIndex->regular_min_price) }}</s>
-
-                                        <span class="tz-flash__off">-{{ $discountPercent }}%</span>
-                                    </span>
-                                @endif
-                            </a>
-                        @endforeach
-                    </div>
+                    <v-flash-sale-carousel :products='@json($flashSaleCardProducts)'>
+                        <x-shop::shimmer.products.carousel />
+                    </v-flash-sale-carousel>
                 </div>
             </div>
         </section>
     @endif
+
+    @pushOnce('scripts')
+        <script
+            type="text/x-template"
+            id="v-flash-sale-carousel-template"
+        >
+            <div class="tz-flash__track">
+                <div
+                    ref="swiperContainer"
+                    class="flex gap-5 overflow-auto scroll-smooth scrollbar-hide pb-2.5 [&>*]:flex-[0] max-sm:gap-4"
+                >
+                    <x-shop::products.card
+                        class="min-w-[220px] max-w-[220px] max-md:min-w-[170px] max-md:max-w-[170px]"
+                        v-for="product in products"
+                        ::key="product.id"
+                    />
+                </div>
+
+                <template v-if="products.length > 4">
+                    <span
+                        class="icon-arrow-left-stylish rtl:icon-arrow-right-stylish absolute top-1/2 z-10 -mt-5 inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-white text-xl shadow ltr:-left-4 rtl:-right-4 max-lg:hidden"
+                        role="button"
+                        aria-label="@lang('shop::app.components.products.carousel.previous')"
+                        tabindex="0"
+                        @click="swipeLeft"
+                    ></span>
+
+                    <span
+                        class="icon-arrow-right-stylish rtl:icon-arrow-left-stylish absolute top-1/2 z-10 -mt-5 inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-white text-xl shadow ltr:-right-4 rtl:-left-4 max-lg:hidden"
+                        role="button"
+                        aria-label="@lang('shop::app.components.products.carousel.next')"
+                        tabindex="0"
+                        @click="swipeRight"
+                    ></span>
+                </template>
+            </div>
+        </script>
+
+        <script type="module">
+            app.component('v-flash-sale-carousel', {
+                template: '#v-flash-sale-carousel-template',
+
+                props: ['products'],
+
+                data() {
+                    return {
+                        offset: 240,
+                    };
+                },
+
+                methods: {
+                    swipeLeft() {
+                        this.$refs.swiperContainer.scrollLeft -= this.offset;
+                    },
+
+                    swipeRight() {
+                        const container = this.$refs.swiperContainer;
+
+                        if (container.scrollLeft + container.clientWidth >= container.scrollWidth) {
+                            container.scrollLeft = 0;
+                        } else {
+                            container.scrollLeft += this.offset;
+                        }
+                    },
+                },
+            });
+        </script>
+    @endPushOnce
 
     {{--
         Driven by an `image_carousel` theme customization named "Brands"
