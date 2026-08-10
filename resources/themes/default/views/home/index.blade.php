@@ -498,10 +498,18 @@
             color: #ffffff;
         }
 
-        /* Rail wraps the native product-card component; padded to give the
-           left/right arrow buttons room. */
+        .tz-flash__nav {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .tz-flash__nav [class*="icon-arrow-"] {
+            color: var(--tz-navy);
+        }
+
+        /* Rail wraps the native product-card component. */
         .tz-flash__track {
-            position: relative;
             padding: 16px 20px 20px;
         }
 
@@ -902,24 +910,13 @@
             <div class="tz-container">
                 <h2 class="tz-flash__heading">{{ $flashSaleOptions['title'] ?? 'Flash Sale' }}</h2>
 
-                <div class="tz-flash__panel">
-                    <div class="tz-flash__bar">
-                        <span class="tz-flash__subtitle">{{ $flashSaleOptions['subtitle'] ?? '' }}</span>
-
-                        @if (! empty($flashSaleOptions['view_all_url']))
-                            <a
-                                href="{{ $flashSaleOptions['view_all_url'] }}"
-                                class="tz-flash__all"
-                            >
-                                @lang('shop::app.components.products.carousel.view-all')
-                            </a>
-                        @endif
-                    </div>
-
-                    <v-flash-sale-carousel :products='@json($flashSaleCardProducts)'>
-                        <x-shop::shimmer.products.carousel :navigation-link="false" />
-                    </v-flash-sale-carousel>
-                </div>
+                <v-flash-sale-carousel
+                    :products='@json($flashSaleCardProducts)'
+                    subtitle="{{ $flashSaleOptions['subtitle'] ?? '' }}"
+                    view-all-url="{{ $flashSaleOptions['view_all_url'] ?? '' }}"
+                >
+                    <x-shop::shimmer.products.carousel :navigation-link="false" />
+                </v-flash-sale-carousel>
             </div>
         </section>
     @endif
@@ -929,35 +926,53 @@
             type="text/x-template"
             id="v-flash-sale-carousel-template"
         >
-            <div class="tz-flash__track">
-                <div
-                    ref="swiperContainer"
-                    class="flex gap-5 overflow-auto scroll-smooth scrollbar-hide pb-2.5 [&>*]:flex-[0] max-sm:gap-4"
-                >
-                    <x-shop::products.card
-                        class="min-w-[220px] max-w-[220px] max-md:min-w-[170px] max-md:max-w-[170px]"
-                        v-for="product in products"
-                        ::key="product.id"
-                    />
+            <div class="tz-flash__panel">
+                <div class="tz-flash__bar">
+                    <span
+                        class="tz-flash__subtitle"
+                        v-if="subtitle"
+                    >@{{ subtitle }}</span>
+
+                    <div class="tz-flash__nav">
+                        <template v-if="products.length > 4">
+                            <span
+                                class="icon-arrow-left-stylish rtl:icon-arrow-right-stylish inline-block cursor-pointer text-2xl max-lg:hidden"
+                                role="button"
+                                aria-label="@lang('shop::app.components.products.carousel.previous')"
+                                tabindex="0"
+                                @click="swipeLeft"
+                            ></span>
+
+                            <span
+                                class="icon-arrow-right-stylish rtl:icon-arrow-left-stylish inline-block cursor-pointer text-2xl max-lg:hidden"
+                                role="button"
+                                aria-label="@lang('shop::app.components.products.carousel.next')"
+                                tabindex="0"
+                                @click="swipeRight"
+                            ></span>
+                        </template>
+
+                        <a
+                            :href="viewAllUrl"
+                            class="tz-flash__all"
+                            v-if="viewAllUrl"
+                        >
+                            @lang('shop::app.components.products.carousel.view-all')
+                        </a>
+                    </div>
                 </div>
 
-                <template v-if="products.length > 4">
-                    <span
-                        class="icon-arrow-left-stylish rtl:icon-arrow-right-stylish absolute top-1/2 z-10 -mt-5 inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-white text-xl shadow ltr:-left-4 rtl:-right-4 max-lg:hidden"
-                        role="button"
-                        aria-label="@lang('shop::app.components.products.carousel.previous')"
-                        tabindex="0"
-                        @click="swipeLeft"
-                    ></span>
-
-                    <span
-                        class="icon-arrow-right-stylish rtl:icon-arrow-left-stylish absolute top-1/2 z-10 -mt-5 inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-white text-xl shadow ltr:-right-4 rtl:-left-4 max-lg:hidden"
-                        role="button"
-                        aria-label="@lang('shop::app.components.products.carousel.next')"
-                        tabindex="0"
-                        @click="swipeRight"
-                    ></span>
-                </template>
+                <div class="tz-flash__track">
+                    <div
+                        ref="swiperContainer"
+                        class="flex gap-8 pb-2.5 [&>*]:flex-[0] overflow-auto scroll-smooth scrollbar-hide max-md:gap-7 max-sm:gap-4 max-md:whitespace-nowrap"
+                    >
+                        <x-shop::products.card
+                            class="min-w-[291px] max-md:h-fit max-md:min-w-56 max-sm:min-w-[192px]"
+                            v-for="product in products"
+                        />
+                    </div>
+                </div>
             </div>
         </script>
 
@@ -965,11 +980,11 @@
             app.component('v-flash-sale-carousel', {
                 template: '#v-flash-sale-carousel-template',
 
-                props: ['products'],
+                props: ['products', 'subtitle', 'viewAllUrl'],
 
                 data() {
                     return {
-                        offset: 240,
+                        offset: 323,
                     };
                 },
 
