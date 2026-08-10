@@ -58,7 +58,7 @@ class ThemeController extends Controller
         $validated = $this->validate(request(), [
             'name' => 'required',
             'sort_order' => 'required|numeric',
-            'type' => 'required|in:product_carousel,category_carousel,static_content,image_carousel,footer_links,services_content,flash_sale',
+            'type' => 'required|in:product_carousel,category_carousel,static_content,image_carousel,footer_links,services_content,flash_sale,promo_banner',
             'channel_id' => 'required|in:'.implode(',', (core()->getAllChannels()->pluck('id')->toArray())),
             'theme_code' => 'required',
         ]);
@@ -92,7 +92,11 @@ class ThemeController extends Controller
             ? $this->getFlashSaleProducts($theme)
             : [];
 
-        return view('admin::settings.themes.edit', compact('theme', 'flashSaleProducts'));
+        $promoBanner = $theme->type === 'promo_banner'
+            ? ($theme->translate(core()->getRequestedLocaleCode())->options ?? [])
+            : [];
+
+        return view('admin::settings.themes.edit', compact('theme', 'flashSaleProducts', 'promoBanner'));
     }
 
     /**

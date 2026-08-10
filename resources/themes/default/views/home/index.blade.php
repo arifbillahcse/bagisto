@@ -916,67 +916,81 @@
         aria-label="Popular products"
     />
 
-    <!-- ============ 5. PROMO BANNER ============ -->
-    <section class="tz-promo">
-        <div class="tz-container">
-            <div class="tz-promo__head">
-                <div></div>
+    {{--
+        Promo Banner - admin-editable in Admin -> Settings -> Themes ->
+        Create Theme (Type: Promo Banner). Heading/text/button plus a
+        free-form list of cards (title, text, optional image, optional
+        button) are stored as JSON options and rendered here.
+    --}}
+    @php
+        $promoBanner = collect($customizations)->firstWhere('type', 'promo_banner')?->options ?? [];
+        $promoCards = collect($promoBanner['cards'] ?? [])->filter(fn ($card) => ! empty($card['title']))->values();
+    @endphp
 
-                <div>
-                    <h2 class="tz-promo__heading">
-                        Switch Smarter. Enjoy Cleaner Alternatives Today.
-                    </h2>
+    @if (! empty($promoBanner['heading']) || $promoCards->isNotEmpty())
+        <section class="tz-promo">
+            <div class="tz-container">
+                @if (! empty($promoBanner['heading']))
+                    <div class="tz-promo__head">
+                        <div></div>
 
-                    <p class="tz-promo__text">
-                        Experience the next level with authentic devices and premium
-                        products designed for a cleaner, smarter lifestyle.
-                    </p>
+                        <div>
+                            <h2 class="tz-promo__heading">
+                                {{ $promoBanner['heading'] }}
+                            </h2>
 
-                    <a
-                        href="{{ route('shop.search.index') }}"
-                        class="tz-promo__btn"
-                    >
-                        Shop Now
-                    </a>
-                </div>
-            </div>
+                            @if (! empty($promoBanner['text']))
+                                <p class="tz-promo__text">
+                                    {{ $promoBanner['text'] }}
+                                </p>
+                            @endif
 
-            <div class="tz-promo__cards">
-                <div class="tz-promo__card">
-                    <p class="tz-promo__card-title">Authentic products with rich quality</p>
-
-                    <a
-                        href="{{ route('shop.search.index') }}"
-                        class="tz-btn"
-                    >
-                        Shop Now
-                    </a>
-                </div>
-
-                <div class="tz-promo__card">
-                    <p class="tz-promo__card-title">Exclusive Collections</p>
-
-                    <p class="tz-promo__card-text">Exclusive blends and devices.</p>
-
-                    <div class="tz-promo__card-img">
-                        {{-- Replace with <img src="..." alt="" /> --}}
-                        Promo image
+                            @if (! empty($promoBanner['button_text']))
+                                <a
+                                    href="{{ $promoBanner['button_link'] ?? route('shop.search.index') }}"
+                                    class="tz-promo__btn"
+                                >
+                                    {{ $promoBanner['button_text'] }}
+                                </a>
+                            @endif
+                        </div>
                     </div>
-                </div>
+                @endif
 
-                <div class="tz-promo__card">
-                    <p class="tz-promo__card-title">Devices &amp; Accessories</p>
+                @if ($promoCards->isNotEmpty())
+                    <div class="tz-promo__cards">
+                        @foreach ($promoCards as $card)
+                            <div class="tz-promo__card">
+                                <p class="tz-promo__card-title">{{ $card['title'] }}</p>
 
-                    <p class="tz-promo__card-text">Smooth, sleek, and easy-to-use gear.</p>
+                                @if (! empty($card['text']))
+                                    <p class="tz-promo__card-text">{{ $card['text'] }}</p>
+                                @endif
 
-                    <div class="tz-promo__card-img">
-                        {{-- Replace with <img src="..." alt="" /> --}}
-                        Promo image
+                                @if (! empty($card['image']))
+                                    <div class="tz-promo__card-img">
+                                        <img
+                                            src="{{ $card['image'] }}"
+                                            alt="{{ $card['title'] }}"
+                                        />
+                                    </div>
+                                @endif
+
+                                @if (! empty($card['button_text']))
+                                    <a
+                                        href="{{ $card['button_link'] ?? route('shop.search.index') }}"
+                                        class="tz-btn"
+                                    >
+                                        {{ $card['button_text'] }}
+                                    </a>
+                                @endif
+                            </div>
+                        @endforeach
                     </div>
-                </div>
+                @endif
             </div>
-        </div>
-    </section>
+        </section>
+    @endif
 
     <!-- ============ 6. NEW ARRIVAL (native, real data) ============ -->
     <x-shop::products.carousel

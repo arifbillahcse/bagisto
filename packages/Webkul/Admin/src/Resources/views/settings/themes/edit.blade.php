@@ -12,7 +12,7 @@
     @endphp
 
     <x-admin::form
-        :action="route('admin.settings.themes.update', $theme->id)"
+        :action="$theme->type === 'promo_banner' ? route('admin.settings.themes.promo_banner.update', $theme->id) : route('admin.settings.themes.update', $theme->id)"
         enctype="multipart/form-data"
         v-slot="{ errors }"
     >
@@ -106,6 +106,9 @@
 
                 <!-- Flash-sale Template -->
                 @includeWhen($theme->type === 'flash_sale', 'admin::settings.themes.edit.flash-sale')
+
+                <!-- Promo-banner Template (packages/Webkul/ShopExtension) -->
+                @includeWhen($theme->type === 'promo_banner', 'shopext::settings.themes.edit.promo-banner')
             </div>
 
             <!-- General -->

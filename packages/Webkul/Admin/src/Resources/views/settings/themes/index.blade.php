@@ -207,6 +207,7 @@
                             footer_links: "@lang('admin::app.settings.themes.create.type.footer-links')",
                             services_content: "@lang('admin::app.settings.themes.create.type.services-content')",
                             flash_sale: "@lang('admin::app.settings.themes.create.type.flash-sale')",
+                            promo_banner: "@lang('admin::app.settings.themes.create.type.promo-banner')",
                         },
 
                         isLoading: false,
