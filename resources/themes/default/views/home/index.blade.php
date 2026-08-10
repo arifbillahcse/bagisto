@@ -446,73 +446,6 @@
             padding: 20px;
         }
 
-        /* ============ 1b. FLASH SALE ============ */
-        .tz-flash {
-            padding: 34px 0 10px;
-            background: #f4f7fa;
-        }
-
-        .tz-flash__heading {
-            margin: 0 0 14px;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--tz-navy);
-        }
-
-        .tz-flash__panel {
-            background: #ffffff;
-            border-radius: 6px;
-            overflow: hidden;
-        }
-
-        .tz-flash__bar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            padding: 16px 20px;
-            border-bottom: 1px solid #ececec;
-        }
-
-        .tz-flash__subtitle {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #f57224;
-        }
-
-        .tz-flash__all {
-            padding: 8px 18px;
-            border: 1px solid #f57224;
-            border-radius: 3px;
-            font-size: .82rem;
-            font-weight: 700;
-            letter-spacing: .06em;
-            text-transform: uppercase;
-            color: #f57224;
-            white-space: nowrap;
-            transition: background .15s ease, color .15s ease;
-        }
-
-        .tz-flash__all:hover {
-            background: #f57224;
-            color: #ffffff;
-        }
-
-        .tz-flash__nav {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .tz-flash__nav [class*="icon-arrow-"] {
-            color: var(--tz-navy);
-        }
-
-        /* Rail wraps the native product-card component. */
-        .tz-flash__track {
-            padding: 16px 20px 20px;
-        }
-
         /* ============ 2. BRAND STRIP ============ */
         .tz-brands {
             padding: 44px 0;
@@ -872,140 +805,26 @@
         Flash Sale - products are hand-picked in
         Admin -> Settings -> Themes -> Create Theme (Type: Flash Sale).
 
-        Only the product IDs are stored, in the order the admin dragged them
-        into, so they are re-fetched here and re-sorted back into that order
-        (the DB returns them by id, not by the admin's arrangement).
+        Rendered with the stock product carousel (same component as the
+        sections below), which fetches the hand-picked products from a
+        dedicated endpoint. Keeping it on the native component means the
+        cards, arrows and responsive behaviour stay identical to the rest
+        of the page and need no theme-local Tailwind classes -- this file
+        is outside the Shop package's Tailwind content globs, so utility
+        classes written here would not be compiled.
     --}}
     @php
-        $flashSale = collect($customizations)->firstWhere('type', 'flash_sale');
-
-        $flashSaleOptions = $flashSale?->options ?? [];
-
-        $flashSaleProductIds = array_values($flashSaleOptions['product_ids'] ?? []);
-
-        $flashSaleProducts = collect();
-
-        if ($flashSaleProductIds) {
-            $found = app(\Webkul\Product\Repositories\ProductRepository::class)
-                ->with(['images', 'price_indices'])
-                ->findWhereIn('id', $flashSaleProductIds)
-                ->keyBy('id');
-
-            $flashSaleProducts = collect($flashSaleProductIds)
-                ->map(fn ($productId) => $found->get($productId))
-                ->filter(fn ($product) => $product?->status)
-                ->values();
-        }
-
-        /**
-         * Rendered with the same `x-shop::products.card` component (and the
-         * same JSON shape) used by the native product carousels, so the
-         * flash sale cards look identical to "Our Popular Products" etc.
-         */
-        $flashSaleCardProducts = \Webkul\Shop\Http\Resources\ProductCardResource::collection($flashSaleProducts)->resolve();
+        $flashSaleOptions = collect($customizations)->firstWhere('type', 'flash_sale')?->options ?? [];
     @endphp
 
-    @if ($flashSaleProducts->isNotEmpty())
-        <section class="tz-flash">
-            <div class="tz-container">
-                <h2 class="tz-flash__heading">{{ $flashSaleOptions['title'] ?? 'Flash Sale' }}</h2>
-
-                <v-flash-sale-carousel
-                    :products='@json($flashSaleCardProducts)'
-                    subtitle="{{ $flashSaleOptions['subtitle'] ?? '' }}"
-                    view-all-url="{{ $flashSaleOptions['view_all_url'] ?? '' }}"
-                >
-                    <x-shop::shimmer.products.carousel :navigation-link="false" />
-                </v-flash-sale-carousel>
-            </div>
-        </section>
+    @if (! empty($flashSaleOptions['product_ids']))
+        <x-shop::products.carousel
+            :title="$flashSaleOptions['title'] ?? 'Flash Sale'"
+            :src="route('shop.api.products.flash_sale.index')"
+            :navigation-link="$flashSaleOptions['view_all_url'] ?? ''"
+            aria-label="Flash sale products"
+        />
     @endif
-
-    @pushOnce('scripts')
-        <script
-            type="text/x-template"
-            id="v-flash-sale-carousel-template"
-        >
-            <div class="tz-flash__panel">
-                <div class="tz-flash__bar">
-                    <span
-                        class="tz-flash__subtitle"
-                        v-if="subtitle"
-                    >@{{ subtitle }}</span>
-
-                    <div class="tz-flash__nav">
-                        <template v-if="products.length > 4">
-                            <span
-                                class="icon-arrow-left-stylish rtl:icon-arrow-right-stylish inline-block cursor-pointer text-2xl max-lg:hidden"
-                                role="button"
-                                aria-label="@lang('shop::app.components.products.carousel.previous')"
-                                tabindex="0"
-                                @click="swipeLeft"
-                            ></span>
-
-                            <span
-                                class="icon-arrow-right-stylish rtl:icon-arrow-left-stylish inline-block cursor-pointer text-2xl max-lg:hidden"
-                                role="button"
-                                aria-label="@lang('shop::app.components.products.carousel.next')"
-                                tabindex="0"
-                                @click="swipeRight"
-                            ></span>
-                        </template>
-
-                        <a
-                            :href="viewAllUrl"
-                            class="tz-flash__all"
-                            v-if="viewAllUrl"
-                        >
-                            @lang('shop::app.components.products.carousel.view-all')
-                        </a>
-                    </div>
-                </div>
-
-                <div class="tz-flash__track">
-                    <div
-                        ref="swiperContainer"
-                        class="flex gap-8 pb-2.5 [&>*]:flex-[0] overflow-auto scroll-smooth scrollbar-hide max-md:gap-7 max-sm:gap-4 max-md:whitespace-nowrap"
-                    >
-                        <x-shop::products.card
-                            class="min-w-[291px] max-md:h-fit max-md:min-w-56 max-sm:min-w-[192px]"
-                            v-for="product in products"
-                        />
-                    </div>
-                </div>
-            </div>
-        </script>
-
-        <script type="module">
-            app.component('v-flash-sale-carousel', {
-                template: '#v-flash-sale-carousel-template',
-
-                props: ['products', 'subtitle', 'viewAllUrl'],
-
-                data() {
-                    return {
-                        offset: 323,
-                    };
-                },
-
-                methods: {
-                    swipeLeft() {
-                        this.$refs.swiperContainer.scrollLeft -= this.offset;
-                    },
-
-                    swipeRight() {
-                        const container = this.$refs.swiperContainer;
-
-                        if (container.scrollLeft + container.clientWidth >= container.scrollWidth) {
-                            container.scrollLeft = 0;
-                        } else {
-                            container.scrollLeft += this.offset;
-                        }
-                    },
-                },
-            });
-        </script>
-    @endPushOnce
 
     {{--
         Driven by an `image_carousel` theme customization named "Brands"

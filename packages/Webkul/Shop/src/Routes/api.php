@@ -34,6 +34,8 @@ Route::group(['prefix' => 'api'], function () {
     Route::controller(ProductController::class)->prefix('products')->group(function () {
         Route::get('', 'index')->name('shop.api.products.index');
 
+        Route::get('flash-sale', 'flashSaleProducts')->name('shop.api.products.flash_sale.index');
+
         Route::get('{id}/related', 'relatedProducts')->name('shop.api.products.related.index');
 
         Route::get('{id}/up-sell', 'upSellProducts')->name('shop.api.products.up-sell.index');
