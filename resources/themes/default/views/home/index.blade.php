@@ -594,6 +594,24 @@
             width: auto;
         }
 
+        /* ============ 3b. CATEGORY BANNER ============ */
+        .tz-catbanner {
+            padding: 28px 0;
+            background: #ffffff;
+        }
+
+        .tz-catbanner__link {
+            display: block;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .tz-catbanner__img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
         /* ============ 5. PROMO BANNER ============ */
         .tz-promo {
             margin-top: 64px;
@@ -1044,6 +1062,39 @@
         :navigation-link="route('shop.home.index')"
         aria-label="Shop by category"
     />
+
+    <!-- ============ 3b. CATEGORY BANNER ============ -->
+    @php
+        /**
+         * Driven by an `image_carousel` theme customization named "Category Banner"
+         * (Admin -> Settings -> Themes -> Create Theme -> Type: Image Carousel).
+         * Only the FIRST uploaded image is used as a single, full-width banner.
+         */
+        $categoryBannerImage = collect($customizations)
+            ->where('type', 'image_carousel')
+            ->firstWhere('name', 'Category Banner')
+            ?->options['images'] ?? [];
+
+        $categoryBannerImage = collect($categoryBannerImage)->firstWhere('image', '!=', null);
+    @endphp
+
+    @if ($categoryBannerImage)
+        <section class="tz-catbanner">
+            <div class="tz-container">
+                <a
+                    href="{{ ($categoryBannerImage['link'] ?? '') ?: '#' }}"
+                    class="tz-catbanner__link"
+                >
+                    <img
+                        src="{{ $categoryBannerImage['image'] }}"
+                        alt="{{ $categoryBannerImage['title'] ?? 'Banner' }}"
+                        class="tz-catbanner__img"
+                        loading="lazy"
+                    />
+                </a>
+            </div>
+        </section>
+    @endif
 
     <!-- ============ 4. POPULAR PRODUCTS (native, real data) ============ -->
     <x-shop::products.carousel
