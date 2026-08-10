@@ -100,6 +100,7 @@
             "Webkul\\Sales\\": "packages/Webkul/Sales/src",
             "Webkul\\Shipping\\": "packages/Webkul/Shipping/src",
             "Webkul\\Shop\\": "packages/Webkul/Shop/src",
+            "Webkul\\ShopExtension\\": "packages/Webkul/ShopExtension/src",
             "Webkul\\Sitemap\\": "packages/Webkul/Sitemap/src",
             "Webkul\\SocialLogin\\": "packages/Webkul/SocialLogin/src",
             "Webkul\\SocialShare\\": "packages/Webkul/SocialShare/src",

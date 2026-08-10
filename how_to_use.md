@@ -86,3 +86,20 @@ cPanel-এ LiteSpeed symlink protection এর কারণে `storage:link` �
 ```bash
 rsync -a /disk2/demosoftorio/laravel.demo.softorio.com/storage/app/public/ /disk2/demosoftorio/laravel.demo.softorio.com/public/storage/
 ```
+
+---
+
+## Core-safe কাস্টমাইজেশন (ভবিষ্যতে আপগ্রেডের জন্য)
+
+Flash Sale API (`/api/products/flash-sale`) আগে core `Shop` প্যাকেজে সরাসরি যোগ করা হয়েছিল, যেটা
+ভবিষ্যতে Bagisto আপগ্রেড করলে merge conflict করত। এখন এটা একটা আলাদা প্যাকেজে সরানো হয়েছে —
+
+`packages/Webkul/ShopExtension/`
+
+এই প্যাকেজে আমাদের নিজস্ব কাস্টম রুট/কন্ট্রোলার থাকবে যেগুলো core Bagisto ফাইল স্পর্শ না করেই
+কাজ করে। ভবিষ্যতে নতুন কাস্টম ফিচার (custom API endpoint, custom controller ইত্যাদি) লাগলে এই
+প্যাকেজেই যোগ করা উচিত, যাতে `packages/Webkul/Shop/`, `packages/Webkul/Admin/` ইত্যাদি core
+প্যাকেজ অপরিবর্তিত থাকে এবং Bagisto আপগ্রেড করার সময় merge conflict না হয়।
+
+**নিয়ম:** কখনো `packages/Webkul/<CorePackage>/` এর ভেতরের ফাইল সরাসরি এডিট করবেন না। প্রয়োজনে
+`ShopExtension` প্যাকেজে নতুন রুট/কন্ট্রোলার/লিসেনার যোগ করুন।

@@ -35,6 +35,7 @@ use Webkul\Rule\Providers\RuleServiceProvider;
 use Webkul\Sales\Providers\SalesServiceProvider;
 use Webkul\Shipping\Providers\ShippingServiceProvider;
 use Webkul\Shop\Providers\ShopServiceProvider;
+use Webkul\ShopExtension\Providers\ShopExtensionServiceProvider;
 use Webkul\Sitemap\Providers\SitemapServiceProvider;
 use Webkul\SocialLogin\Providers\SocialLoginServiceProvider;
 use Webkul\SocialShare\Providers\SocialShareServiceProvider;
@@ -86,6 +87,7 @@ return [
     SalesServiceProvider::class,
     ShippingServiceProvider::class,
     ShopServiceProvider::class,
+    ShopExtensionServiceProvider::class,
     SitemapServiceProvider::class,
     SocialLoginServiceProvider::class,
     SocialShareServiceProvider::class,
