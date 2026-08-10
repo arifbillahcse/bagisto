@@ -14,11 +14,11 @@
      * Admin-managed link sections (Admin -> Settings -> Themes -> Footer Links).
      * Each section is a list of ['title' => ..., 'url' => ..., 'sort_order' => ...].
      *
-     * The header's utility bar is driven by footer_links records too, matched on
-     * their name, so those names are skipped here - otherwise the footer would
-     * render whichever record happened to be created first.
+     * The header rows are driven by footer_links records too, matched on their
+     * name, so those names are skipped here - otherwise the footer would render
+     * whichever record happened to be created first.
      */
-    $reservedForHeader = ['Top Bar Contact', 'Top Bar Links'];
+    $reservedForHeader = ['Top Bar Contact', 'Top Bar Links', 'Header Links'];
 
     $linkCustomization = $themeCustomizationRepository->findWhere([
         'type'       => 'footer_links',
