@@ -826,47 +826,6 @@
         />
     @endif
 
-    {{--
-        Driven by an `image_carousel` theme customization named "Brands"
-        (Admin -> Settings -> Themes -> Create Theme, Type: Image Carousel).
-        Each slide's image becomes a logo; its link is where the logo sends
-        the customer -- point it at a brand-filtered catalog search URL,
-        e.g. {{ route('shop.search.index') }}?brand=Nike
-    --}}
-    @php
-        $brandRecord = collect($customizations)->where('type', 'image_carousel')->firstWhere('name', 'Brands');
-
-        $brandLogos = collect($brandRecord?->options['images'] ?? [])
-            ->filter(fn ($logo) => ! empty($logo['image']))
-            ->values();
-    @endphp
-
-    <!-- ============ 2. BRAND STRIP ============ -->
-    <section class="tz-brands">
-        <div class="tz-container">
-            @if ($brandLogos->isNotEmpty())
-                <div class="tz-brands__inner">
-                    @foreach ($brandLogos as $logo)
-                        <a
-                            href="{{ $logo['link'] ?: '#' }}"
-                            class="tz-brands__item"
-                        >
-                            <img
-                                src="{{ $logo['image'] }}"
-                                alt="{{ $logo['title'] ?? 'Brand' }}"
-                                loading="lazy"
-                            >
-                        </a>
-                    @endforeach
-                </div>
-            @else
-                <div class="tz-hero2__empty">
-                    Create an <strong>Image Carousel</strong> named <strong>“Brands”</strong> in the admin panel to show brand logos here.
-                </div>
-            @endif
-        </div>
-    </section>
-
     <!-- ============ 3. SHOP BY CATEGORY (native, real data) ============ -->
     <x-shop::categories.carousel
         title="Shop by Category"
@@ -1008,7 +967,46 @@
         aria-label="Products on sale"
     />
 
+    {{--
+        Driven by an `image_carousel` theme customization named "Brands"
+        (Admin -> Settings -> Themes -> Create Theme, Type: Image Carousel).
+        Each slide's image becomes a logo; its link is where the logo sends
+        the customer -- point it at a brand-filtered catalog search URL,
+        e.g. {{ route('shop.search.index') }}?brand=Nike
+    --}}
+    @php
+        $brandRecord = collect($customizations)->where('type', 'image_carousel')->firstWhere('name', 'Brands');
 
+        $brandLogos = collect($brandRecord?->options['images'] ?? [])
+            ->filter(fn ($logo) => ! empty($logo['image']))
+            ->values();
+    @endphp
+
+    <!-- ============ 7a. BRAND STRIP ============ -->
+    <section class="tz-brands">
+        <div class="tz-container">
+            @if ($brandLogos->isNotEmpty())
+                <div class="tz-brands__inner">
+                    @foreach ($brandLogos as $logo)
+                        <a
+                            href="{{ $logo['link'] ?: '#' }}"
+                            class="tz-brands__item"
+                        >
+                            <img
+                                src="{{ $logo['image'] }}"
+                                alt="{{ $logo['title'] ?? 'Brand' }}"
+                                loading="lazy"
+                            >
+                        </a>
+                    @endforeach
+                </div>
+            @else
+                <div class="tz-hero2__empty">
+                    Create an <strong>Image Carousel</strong> named <strong>“Brands”</strong> in the admin panel to show brand logos here.
+                </div>
+            @endif
+        </div>
+    </section>
 
 
     <!-- ============ 12. SERVICES STRIP ============ -->
