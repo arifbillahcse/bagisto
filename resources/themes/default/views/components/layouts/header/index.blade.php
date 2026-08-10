@@ -15,7 +15,6 @@
      *                       A url starting with `tel:` renders a phone icon, one
      *                       starting with `mailto:` renders an envelope icon.
      *   "Top Bar Links"   - links shown on the right of the orange bar.
-     *   "Header Links"    - links shown in the grey navigation row.
      *
      * Each falls back to a sensible default below, so the header renders correctly
      * before any of these records exist.
@@ -55,23 +54,12 @@
         ]);
     }
 
-    $headerNavLinks = $headerLinksByName('Header Links');
-
-    if ($headerNavLinks->isEmpty()) {
-        $headerNavLinks = collect([
-            ['title' => 'Home',       'url' => route('shop.home.index')],
-            ['title' => 'About Us',   'url' => route('shop.cms.page', 'about-us')],
-            ['title' => 'Contact Us', 'url' => route('shop.home.contact_us')],
-        ]);
-    }
-
     /**
      * Shared inline styles. Structure is expressed inline rather than through a
      * class so the rows survive a stale or missing stylesheet; the <style> block
      * further down only adds hover colours and breakpoints.
      */
     $sTopLink = 'font-size:13px;color:#ffffff;text-decoration:none;white-space:nowrap;';
-    $sNavLink = 'display:inline-block;padding:14px 0;font-size:14px;font-weight:600;color:#F4511E;text-decoration:none;white-space:nowrap;';
 @endphp
 
 <style>
@@ -79,14 +67,257 @@
         opacity: .8;
     }
 
-    #rnjNavBar a:hover {
-        color: #c53d13 !important;
+    @media (max-width: 1023px) {
+        #rnjTopBar {
+            display: none !important;
+        }
     }
 
-    @media (max-width: 1023px) {
-        #rnjTopBar,
-        #rnjNavBar {
-            display: none !important;
+    /* ===== Desktop header: main row ===== */
+    .rnj-mainrow {
+        display: flex;
+        align-items: center;
+        gap: 40px;
+        width: 100%;
+        min-height: 84px;
+        padding: 12px 60px;
+        background-color: #ffffff;
+    }
+
+    .rnj-mainrow__logo {
+        flex: 0 0 auto;
+    }
+
+    .rnj-mainrow__logo img {
+        display: block;
+        width: auto;
+        height: auto;
+        max-height: 46px;
+    }
+
+    .rnj-mainrow__search {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .rnj-search {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        max-width: 640px;
+        margin-inline: auto;
+    }
+
+    .rnj-search__icon {
+        position: absolute;
+        left: 14px;
+        display: flex;
+        align-items: center;
+        font-size: 20px;
+        color: #71717a;
+        pointer-events: none;
+    }
+
+    html[dir="rtl"] .rnj-search__icon {
+        left: auto;
+        right: 14px;
+    }
+
+    .rnj-search__input {
+        width: 100%;
+        padding: 13px 44px;
+        font-size: 14px;
+        color: #18181b;
+        background-color: #f4f4f5;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        transition: border-color .15s ease;
+    }
+
+    .rnj-search__input:hover,
+    .rnj-search__input:focus {
+        border-color: #a1a1aa;
+        outline: none;
+    }
+
+    /* Right-hand actions */
+    .rnj-actions {
+        display: flex;
+        align-items: flex-start;
+        flex: 0 0 auto;
+        gap: 26px;
+    }
+
+    .rnj-action {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        cursor: pointer;
+        text-decoration: none;
+        color: #18181b;
+    }
+
+    .rnj-action__icon {
+        display: inline-block;
+        font-size: 22px;
+        line-height: 1;
+    }
+
+    .rnj-action__label {
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 1.2;
+        white-space: nowrap;
+        color: #3f3f46;
+    }
+
+    .rnj-action:hover .rnj-action__label,
+    .rnj-action:hover .rnj-action__icon {
+        color: #F4511E;
+    }
+
+    /* The mini-cart renders its own icon + badge; align it like the others */
+    .rnj-action--cart .icon-cart {
+        font-size: 22px;
+        line-height: 1;
+    }
+
+    @media (max-width: 1180px) {
+        .rnj-mainrow {
+            gap: 24px;
+            padding: 12px 32px;
+        }
+
+        .rnj-actions {
+            gap: 18px;
+        }
+    }
+
+    /* ===== Desktop header: category bar ===== */
+    .rnj-catbar {
+        width: 100%;
+        background-color: #0D2818;
+    }
+
+    .rnj-catbar__inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 4px 8px;
+        max-width: 1600px;
+        margin-inline: auto;
+        padding: 0 60px;
+    }
+
+    .rnj-catbar__item {
+        position: relative;
+    }
+
+    .rnj-catbar__link {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 14px 12px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #ffffff;
+        text-decoration: none;
+        white-space: nowrap;
+        transition: color .15s ease;
+    }
+
+    .rnj-catbar__item:hover .rnj-catbar__link {
+        color: #F4511E;
+    }
+
+    .rnj-catbar__caret {
+        font-size: 16px;
+        line-height: 1;
+    }
+
+    /* Sub-category flyout */
+    .rnj-catbar__panel {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 20;
+        min-width: 220px;
+        max-width: 900px;
+        max-height: 70vh;
+        overflow-y: auto;
+        padding: 22px 26px;
+        background-color: #ffffff;
+        border-top: 3px solid #F4511E;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, .18);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(6px);
+        transition: opacity .18s ease, transform .18s ease, visibility .18s;
+    }
+
+    html[dir="rtl"] .rnj-catbar__panel {
+        left: auto;
+        right: 0;
+    }
+
+    .rnj-catbar__item:hover .rnj-catbar__panel {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .rnj-catbar__columns {
+        display: flex;
+        gap: 44px;
+    }
+
+    .rnj-catbar__column {
+        min-width: 150px;
+    }
+
+    .rnj-catbar__child {
+        display: block;
+        margin-bottom: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #0B2540;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .rnj-catbar__child:hover {
+        color: #F4511E;
+    }
+
+    .rnj-catbar__grandchildren {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 8px;
+    }
+
+    .rnj-catbar__grandchild {
+        font-size: 13px;
+        color: #52525b;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    .rnj-catbar__grandchild:hover {
+        color: #F4511E;
+    }
+
+    @media (max-width: 1180px) {
+        .rnj-catbar__inner {
+            padding: 0 32px;
+        }
+
+        .rnj-catbar__link {
+            padding: 12px 8px;
+            font-size: 13px;
         }
     }
 </style>
@@ -293,113 +524,11 @@
             </div>
         </div>
     </v-header-switcher>
-
-    <!-- Custom navigation row -->
-    <div
-        id="rnjNavBar"
-        style="background-color:#F1F1F1;border-top:1px solid #e4e4e7;"
-    >
-        <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 24px;max-width:1600px;margin-left:auto;margin-right:auto;padding:0 60px;">
-            <!-- Custom links -->
-            <nav style="display:flex;flex-wrap:wrap;align-items:center;gap:32px;">
-                @foreach ($headerNavLinks as $link)
-                    <a
-                        href="{{ $link['url'] }}"
-                        style="{{ $sNavLink }}"
-                    >
-                        {{ $link['title'] }}
-                    </a>
-                @endforeach
-            </nav>
-
-            <!-- Live cart total -->
-            <v-header-cart-total></v-header-cart-total>
-        </div>
-    </div>
 </header>
 
 {!! view_render_event('bagisto.shop.layout.header.after') !!}
 
 @pushOnce('scripts')
-    <script
-        type="text/x-template"
-        id="v-header-cart-total-template"
-    >
-        <a
-            :href="cartUrl"
-            style="display:inline-flex;align-items:center;gap:9px;padding:10px 0;text-decoration:none;"
-        >
-            <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="21"
-                height="21"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#F4511E"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                style="display:block;width:21px;height:21px;min-width:21px;flex:0 0 21px;"
-            >
-                <circle cx="9" cy="21" r="1" />
-                <circle cx="20" cy="21" r="1" />
-                <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6" />
-            </svg>
-
-            <span style="font-size:14px;font-weight:700;color:#F4511E;">
-                @{{ total }}
-            </span>
-
-            <span style="font-size:13px;color:#71717a;">
-                (@{{ count }} @{{ count === 1 ? 'Item' : 'Items' }})
-            </span>
-        </a>
-    </script>
-
-    <script type="module">
-        app.component('v-header-cart-total', {
-            template: '#v-header-cart-total-template',
-
-            data() {
-                return {
-                    cartUrl: "{{ route('shop.checkout.cart.index') }}",
-                    total: "{{ core()->formatPrice(0) }}",
-                    count: 0,
-                };
-            },
-
-            mounted() {
-                this.fetchCart();
-
-                /**
-                 * The mini-cart broadcasts this whenever the cart changes, so the
-                 * total stays in sync without a page reload.
-                 */
-                this.$emitter.on('update-mini-cart', (cart) => this.apply(cart));
-            },
-
-            methods: {
-                fetchCart() {
-                    this.$axios.get("{{ route('shop.api.checkout.cart.index') }}")
-                        .then(response => this.apply(response.data.data))
-                        .catch(() => {});
-                },
-
-                apply(cart) {
-                    if (! cart) {
-                        this.total = "{{ core()->formatPrice(0) }}";
-                        this.count = 0;
-
-                        return;
-                    }
-
-                    this.total = cart.formatted_grand_total ?? this.total;
-                    this.count = cart.items_count ?? 0;
-                },
-            },
-        });
-    </script>
-
     <script
         type="text/x-template"
         id="v-header-switcher-template"
