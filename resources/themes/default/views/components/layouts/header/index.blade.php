@@ -430,7 +430,7 @@
     /* ===== Desktop header: category bar ===== */
     .rnj-catbar {
         width: 100%;
-        background-color: #0D2818;
+        background-color: #15A3DA;
     }
 
     .rnj-catbar__inner {
