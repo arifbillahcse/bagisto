@@ -917,7 +917,7 @@
                     </div>
 
                     <v-flash-sale-carousel :products='@json($flashSaleCardProducts)'>
-                        <x-shop::shimmer.products.carousel />
+                        <x-shop::shimmer.products.carousel :navigation-link="false" />
                     </v-flash-sale-carousel>
                 </div>
             </div>
