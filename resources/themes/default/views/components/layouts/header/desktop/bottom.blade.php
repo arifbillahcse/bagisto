@@ -296,8 +296,15 @@
             <span class="rnj-action rnj-action--cart">
                 @include('shop::checkout.cart.mini-cart')
 
+                {{--
+                    The shared translation key says "Shopping Cart" (used for
+                    the drawer heading and aria-labels too, where the fuller
+                    text is appropriate) -- the header row label is
+                    intentionally just "Cart" to match the other short
+                    labels (Orders, Wishlist, Compare).
+                --}}
                 <span class="rnj-action__label">
-                    @lang('shop::app.checkout.cart.mini-cart.shopping-cart')
+                    Cart
                 </span>
             </span>
         @endif

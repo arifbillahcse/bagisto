@@ -501,9 +501,15 @@
         color: #F4511E;
     }
 
-    /* The mini-cart renders its own icon + badge; align it like the others */
+    /*
+     * The mini-cart renders its own icon + badge. The icon-cart glyph is a
+     * solid/filled shape (unlike the outline icon-truck/icon-heart/icon-
+     * compare glyphs), so it reads visually heavier/bigger at the same
+     * font-size -- sized down a bit further to balance it against the
+     * others.
+     */
     .rnj-action--cart .icon-cart {
-        font-size: 22px !important;
+        font-size: 19px !important;
         line-height: 1 !important;
     }
 
