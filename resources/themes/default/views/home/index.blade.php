@@ -986,6 +986,8 @@
     <section class="tz-brands">
         <div class="tz-container">
             @if ($brandLogos->isNotEmpty())
+                <h2 class="tz-section-title">Shop by Brand</h2>
+
                 <div class="tz-brands__inner">
                     @foreach ($brandLogos as $logo)
                         <a
