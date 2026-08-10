@@ -461,17 +461,16 @@
         }
 
         .tz-brands__item {
-            font-size: 1.9rem;
-            font-weight: 800;
-            letter-spacing: .12em;
-            color: #3f3f46;
+            display: inline-flex;
+            align-items: center;
             opacity: .75;
             filter: grayscale(1);
-            transition: opacity .15s ease;
+            transition: opacity .15s ease, filter .15s ease;
         }
 
         .tz-brands__item:hover {
             opacity: 1;
+            filter: grayscale(0);
         }
 
         .tz-brands__item img {
@@ -943,17 +942,44 @@
         </div>
     </section>
 
-    <!-- ============ 2. BRAND STRIP (placeholders until logos provided) ============ -->
+    {{--
+        Driven by an `image_carousel` theme customization named "Brands"
+        (Admin -> Settings -> Themes -> Create Theme, Type: Image Carousel).
+        Each slide's image becomes a logo; its link is where the logo sends
+        the customer -- point it at a brand-filtered catalog search URL,
+        e.g. {{ route('shop.search.index') }}?brand=Nike
+    --}}
+    @php
+        $brandRecord = collect($customizations)->where('type', 'image_carousel')->firstWhere('name', 'Brands');
+
+        $brandLogos = collect($brandRecord?->options['images'] ?? [])
+            ->filter(fn ($logo) => ! empty($logo['image']))
+            ->values();
+    @endphp
+
+    <!-- ============ 2. BRAND STRIP ============ -->
     <section class="tz-brands">
         <div class="tz-container">
-            <div class="tz-brands__inner">
-                {{-- Replace each span with <img src="..." alt="Brand" /> when you have logo files --}}
-                <span class="tz-brands__item">BRAND 1</span>
-                <span class="tz-brands__item">BRAND 2</span>
-                <span class="tz-brands__item">BRAND 3</span>
-                <span class="tz-brands__item">BRAND 4</span>
-                <span class="tz-brands__item">BRAND 5</span>
-            </div>
+            @if ($brandLogos->isNotEmpty())
+                <div class="tz-brands__inner">
+                    @foreach ($brandLogos as $logo)
+                        <a
+                            href="{{ $logo['link'] ?: '#' }}"
+                            class="tz-brands__item"
+                        >
+                            <img
+                                src="{{ $logo['image'] }}"
+                                alt="{{ $logo['title'] ?? 'Brand' }}"
+                                loading="lazy"
+                            >
+                        </a>
+                    @endforeach
+                </div>
+            @else
+                <div class="tz-hero2__empty">
+                    Create an <strong>Image Carousel</strong> named <strong>“Brands”</strong> in the admin panel to show brand logos here.
+                </div>
+            @endif
         </div>
     </section>
 
