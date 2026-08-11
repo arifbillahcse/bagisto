@@ -90,13 +90,29 @@
 - দুটোই দিলে দুটো বাটনই দেখাবে, একটা দিলে একটাই দেখাবে। কোনোটা না দিলে সেকশনটাই হাইড থাকবে।
 - বাটন দুটো ওয়েবসাইটের **সব পেজেই** নিচের-ডান কোণায় (ফ্লোটিং) সবসময় দেখাবে।
 
-## 6. Footer Links
+## 6. Just for You (পার্সোনালাইজড প্রোডাক্ট গ্রিড সেকশন)
+
+- **Type:** কোনো টাইপ সেটিং লাগে না — এটা automatically হোমপেজে আসে
+- **দেখাবে:** 3 rows × 4 columns = 12 টি প্রোডাক্ট (Daraz-এর মতো personalized section)
+- **কাজ করে এভাবে:**
+  - **Returning Customers:** যারা এর আগে কোনো প্রোডাক্ট দেখেছে, তাদের সেই ক্যাটাগরি থেকে **featured products** দেখাবে
+  - **New Visitors:** যারা প্রথমবার আসলো বা কোনো প্রোডাক্ট দেখেনি, তাদের সব থেকে **featured products** দেখাবে
+- **কোনো অ্যাডমিন সেটিংস লাগে না** — products যা "featured" হিসেবে মার্ক করা আছে (Catalog → Products এ edit করে Featured checkbox check করলে) সেগুলোই এতে দেখাবে
+- **কাস্টমার প্রাইভেসি:** শুধু browser-এর cookie-তে সংরক্ষিত হয় (server এ save হয় না), এবং ৩০ দিন পর expire হয়ে যায়
+
+### Just for You কীভাবে কাজ করে (Technical)
+
+- যখন কেউ একটা প্রোডাক্ট পেজ ভিজিট করে → ব্রাউজার একটা cookie-তে সেই প্রোডাক্টের প্রথম category ID store করে রাখে
+- পরবর্তী বার যখন homepage load হয় → সেই category-র featured products দেখায়
+- যদি সেই category-তে কোনো featured product না থাকে → সব থেকে featured products দেখায় (global fallback)
+
+## 7. Footer Links
 
 - **Type:** Footer Links
 - **Name:** যেকোনো নাম
 - ফুটারে "Quick Links" কলামের নিচে যেসব লিংক দেখাবে সেগুলো এখান থেকে অ্যাড/এডিট করা যায়।
 
-## 7. Top Bar (Contact / Links) — হেডারের উপরের কমলা বার
+## 8. Top Bar (Contact / Links) — হেডারের উপরের কমলা বার
 
 - Top Bar এর কন্ট্যাক্ট নাম্বার, ইমেইল এবং লিংকগুলো থিম কাস্টমাইজেশন থেকেই কন্ট্রোল হয়
   (Static Content টাইপ ব্যবহার করা হয়েছে — এডিট করতে হলে থিম লিস্টে "Top Bar Contact" ও
