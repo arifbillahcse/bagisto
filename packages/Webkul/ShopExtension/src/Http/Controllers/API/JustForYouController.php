@@ -29,10 +29,15 @@ class JustForYouController extends APIController
      * directly on `products`, so filtering goes through the repository's `getAll()` (the
      * same method the storefront product API uses) instead of a plain Eloquent `where()`.
      *
+     * The paginator is returned as-is (rather than just its collection) so the response carries
+     * `meta.current_page` / `meta.last_page`, which the front-end "Load More" button uses to
+     * fetch and append the next page over AJAX.
+     *
      * API: /api/products/just-for-you
      * Query params:
      *   - category_id: override category (defaults to the cookie value)
-     *   - limit: how many products to return (default 12)
+     *   - limit: products per page (default 12 = a 3x4 grid)
+     *   - page: which page to return (handled by the paginator, default 1)
      */
     public function index(Request $request): JsonResource
     {
@@ -48,18 +53,22 @@ class JustForYouController extends APIController
             'sort'                 => 'created_at-desc',
         ];
 
-        $products = collect();
+        $products = null;
 
         if ($categoryId) {
             $products = $this->productRepository
-                ->getAll(array_merge($baseParams, ['category_id' => $categoryId]))
-                ->getCollection();
+                ->getAll(array_merge($baseParams, ['category_id' => $categoryId]));
         }
 
-        if ($products->isEmpty()) {
-            $products = $this->productRepository
-                ->getAll($baseParams)
-                ->getCollection();
+        /**
+         * `total()` is checked rather than the current page's emptiness so that paging past the
+         * end of a category's results does not silently fall back to the global list mid-scroll.
+         */
+        if (
+            ! $products
+            || ! $products->total()
+        ) {
+            $products = $this->productRepository->getAll($baseParams);
         }
 
         return ProductCardResource::collection($products);
