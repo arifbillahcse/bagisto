@@ -32,7 +32,7 @@
     src="{{ $src }}"
     title="{{ $title }}"
 >
-    <x-shop::shimmer.products.carousel />
+    <x-shop::shimmer.products.carousel :navigation-link="false" />
 </v-just-for-you-grid>
 
 @pushOnce('styles')
@@ -161,7 +161,7 @@
         </div>
 
         <template v-if="isLoading">
-            <x-shop::shimmer.products.carousel />
+            <x-shop::shimmer.products.carousel :navigation-link="false" />
         </template>
     </script>
 
