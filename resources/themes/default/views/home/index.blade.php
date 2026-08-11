@@ -998,8 +998,9 @@
     <!-- ============ 7. JUST FOR YOU (personalized grid: 3×4 = 12 products) ============ -->
     <x-shopext::just-for-you-grid
         title="Just for You"
+        :src="route('shop.api.products.just_for_you.index', ['limit' => 12])"
         :navigation-link="route('shop.search.index')"
-        :products="$justForYouProducts"
+        aria-label="Just for you"
     />
 
     {{--
