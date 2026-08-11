@@ -514,6 +514,17 @@
     }
 
     /*
+     * The icon sits inside an extra wrapper span (added by the core
+     * mini-cart component for badge positioning) that inherits the
+     * page's default line-height, adding visible whitespace above the
+     * "Cart" label that the other icons don't have. Collapse it.
+     */
+    .rnj-action--cart .relative {
+        display: inline-flex;
+        line-height: 0;
+    }
+
+    /*
      * The item-count badge is a Tailwind-styled pill sized for the core
      * cart page, which reads oversized next to the plain header icons.
      * Shrink it into a small, tight corner badge instead.
