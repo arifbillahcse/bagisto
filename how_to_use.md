@@ -136,8 +136,16 @@ cPanel-এ LiteSpeed symlink protection এর কারণে `storage:link` �
 15–30 মিনিট পরপর চলে, তাই নতুন ইমেজ আপলোডের পর একটু সময় লাগতে পারে। জরুরি হলে ম্যানুয়ালি চালান:
 
 ```bash
+cp -r /disk2/demosoftorio/laravel.demo.softorio.com/storage/app/public/* /disk2/demosoftorio/laravel.demo.softorio.com/public/storage/
+```
+
+অথবা rsync দিয়ে (আরও efficient):
+
+```bash
 rsync -a /disk2/demosoftorio/laravel.demo.softorio.com/storage/app/public/ /disk2/demosoftorio/laravel.demo.softorio.com/public/storage/
 ```
+
+**নোট:** সার্ভারের actual পাথ অনুযায়ী `/disk2/demosoftorio/laravel.demo.softorio.com` প্রতিস্থাপন করুন।
 
 ---
 
