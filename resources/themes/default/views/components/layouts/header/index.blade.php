@@ -64,7 +64,7 @@
 <!-- Utility bar -->
 <div
     id="rnjTopBar"
-    style="background-color:#F4511E;color:#ffffff;"
+    style="background-color:#76C043;color:#ffffff;"
 >
     <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 24px;max-width:1600px;margin-left:auto;margin-right:auto;padding:8px 60px;">
         <!-- Contact details -->
@@ -558,7 +558,7 @@
     /* ===== Desktop header: category bar ===== */
     .rnj-catbar {
         width: 100%;
-        background-color: #15A3DA;
+        background-color: #76C043;
     }
 
     .rnj-catbar__inner {

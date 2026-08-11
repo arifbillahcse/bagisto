@@ -507,7 +507,7 @@
         /* ============ 5. PROMO BANNER ============ */
         .tz-promo {
             margin-top: 64px;
-            background: linear-gradient(180deg, #0e9fd8 0%, #4fc3ee 55%, #eaf7fd 100%);
+            background: #76C043;
             padding: 60px 0 70px;
         }
 
