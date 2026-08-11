@@ -995,12 +995,11 @@
         aria-label="New arrivals"
     />
 
-    <!-- ============ 7. PRODUCT ON SALE (native, real data) ============ -->
-    <x-shop::products.carousel
-        title="Product on Sale!"
-        :src="route('shop.api.products.index', ['sort' => 'created_at-desc', 'limit' => 12])"
+    <!-- ============ 7. JUST FOR YOU (personalized grid: 3×4 = 12 products) ============ -->
+    <x-shopext::just-for-you-grid
+        title="Just for You"
         :navigation-link="route('shop.search.index')"
-        aria-label="Products on sale"
+        :products="$justForYouProducts"
     />
 
     {{--

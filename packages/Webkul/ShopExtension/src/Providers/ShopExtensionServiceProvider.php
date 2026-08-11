@@ -3,9 +3,11 @@
 namespace Webkul\ShopExtension\Providers;
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Webkul\Core\Http\Middleware\NoCacheMiddleware;
 use Webkul\Core\Http\Middleware\PreventRequestsDuringMaintenance;
+use Webkul\ShopExtension\Http\View\Composers\JustForYouComposer;
 
 class ShopExtensionServiceProvider extends ServiceProvider
 {
@@ -21,5 +23,8 @@ class ShopExtensionServiceProvider extends ServiceProvider
             ->group(__DIR__.'/../Routes/admin.php');
 
         $this->loadViewsFrom(__DIR__.'/../Resources/views', 'shopext');
+
+        // Register view composer for homepage → binds $justForYouProducts
+        View::composer('shop::home.index', JustForYouComposer::class);
     }
 }
