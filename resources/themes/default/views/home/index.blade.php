@@ -512,16 +512,12 @@
         }
 
         .tz-promo__head {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: center;
             margin-bottom: 44px;
         }
 
         .tz-promo__heading {
-            font-size: 2.2rem;
-            font-weight: 800;
+            font-size: 1.75rem;
+            font-weight: 700;
             line-height: 1.25;
             color: #ffffff;
         }
@@ -663,7 +659,6 @@
                 display: none;
             }
 
-            .tz-promo__head,
             .tz-promo__cards {
                 grid-template-columns: 1fr;
             }
@@ -927,28 +922,24 @@
             <div class="tz-container">
                 @if (! empty($promoBanner['heading']))
                     <div class="tz-promo__head">
-                        <div></div>
+                        <h2 class="tz-promo__heading">
+                            {{ $promoBanner['heading'] }}
+                        </h2>
 
-                        <div>
-                            <h2 class="tz-promo__heading">
-                                {{ $promoBanner['heading'] }}
-                            </h2>
+                        @if (! empty($promoBanner['text']))
+                            <p class="tz-promo__text">
+                                {{ $promoBanner['text'] }}
+                            </p>
+                        @endif
 
-                            @if (! empty($promoBanner['text']))
-                                <p class="tz-promo__text">
-                                    {{ $promoBanner['text'] }}
-                                </p>
-                            @endif
-
-                            @if (! empty($promoBanner['button_text']))
-                                <a
-                                    href="{{ $promoBanner['button_link'] ?? route('shop.search.index') }}"
-                                    class="tz-promo__btn"
-                                >
-                                    {{ $promoBanner['button_text'] }}
-                                </a>
-                            @endif
-                        </div>
+                        @if (! empty($promoBanner['button_text']))
+                            <a
+                                href="{{ $promoBanner['button_link'] ?? route('shop.search.index') }}"
+                                class="tz-promo__btn"
+                            >
+                                {{ $promoBanner['button_text'] }}
+                            </a>
+                        @endif
                     </div>
                 @endif
 
