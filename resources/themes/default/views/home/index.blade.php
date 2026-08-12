@@ -138,8 +138,8 @@
 @pushOnce('styles')
     <style>
         :root {
-            --tz-accent: #29ABE2;
-            --tz-accent-dark: #1690c4;
+            --tz-accent: #76C043;
+            --tz-accent-dark: #3f9b00;
             --tz-navy: #0B2540;
             --tz-text: #52525b;
             --tz-muted: #71717a;
